@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1200</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1200</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1200</width>
+    <height>800</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Hate Speech Detector</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+     background-color: #1e1e1e; /* Dark background */
+     color: #ffffff; /* White text */
+   </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
+    <item>
+     <widget class="QFrame" name="leftSidebar">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>250</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+         background-color: #2d2d2d; /* Dark gray sidebar */
+         border-right: 1px solid #444; /* Subtle border */
+       </string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::NoFrame</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0,0">
+       <item>
+        <widget class="QPushButton" name="dashboardButton">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+           text-align: left;
+           color: #ffffff;
+           background-color: transparent;
+           padding: 10px;
+           border: none;
+           border-radius: 5px;
+          </string>
+         </property>
+         <property name="text">
+          <string>  Dashboard</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>assets/dashboard_white_color.png</normaloff>assets/dashboard_white_color.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="exploreButton">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+           text-align: left;
+           color: #ffffff;
+           background-color: transparent;
+           padding: 10px;
+           border: none;
+           border-radius: 5px;
+          </string>
+         </property>
+         <property name="text">
+          <string>  Explore</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>assets/explore_white.png.png</normaloff>assets/explore_white.png.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="hatespeechImagesButton">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+           text-align: left;
+           color: #ffffff;
+           background-color: transparent;
+           padding: 10px;
+           border: none;
+           border-radius: 5px;
+          </string>
+         </property>
+         <property name="text">
+          <string>  Hate Speech Images</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>assets/hatespeechImage_white.png</normaloff>assets/hatespeechImage_white.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="mainContentStack">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LayoutDirection::LeftToRight</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+        background-color: #1e1e1e; /* Dark background */
+       </string>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="dashboardPage">
+       <layout class="QVBoxLayout" name="dashboardLayout">
+        <item>
+         <layout class="QHBoxLayout" name="dashboardTitleLayout" stretch="0,1">
+          <item>
+           <widget class="QPushButton" name="menuButton">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              text-align: left;
+              color: #ffffff;
+              background-color: transparent;
+              padding: 10px;
+              border: none;
+              border-radius: 5px;
+             </string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>assets/menu_icon.png</normaloff>assets/menu_icon.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="dashboardTitleLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>28</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              color: #ffffff; /* White text */
+              padding: 5px;
+              margin: 0;
+             </string>
+            </property>
+            <property name="text">
+             <string>Dashboard</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="dashboardContentLayout">
+          <item>
+           <widget class="QPushButton" name="scanFolderButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              background-color: #444; /* Gray button */
+              color: #ffffff; /* White text */
+              padding: 10px;
+              border-radius: 5px;
+              border: none;
+             </string>
+            </property>
+            <property name="text">
+             <string>Click to Scan Folder</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="chartLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+            color: #ffffff; /* White text */
+            padding: 5px;
+            margin: 0;
+           </string>
+          </property>
+          <property name="text">
+           <string>No Data to Show</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="explorePage">
+       <layout class="QVBoxLayout" name="exploreLayout">
+        <item>
+         <layout class="QHBoxLayout" name="exploreTitleLayout" stretch="0,1,1">
+          <item>
+           <widget class="QPushButton" name="menuButton">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              text-align: left;
+              color: #ffffff;
+              background-color: transparent;
+              padding: 10px;
+              border: none;
+              border-radius: 5px;
+             </string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>assets/menu_icon.png</normaloff>assets/menu_icon.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="exploreTitleLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>28</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              color: #ffffff; /* White text */
+              padding: 5px;
+              margin: 0;
+             </string>
+            </property>
+            <property name="text">
+             <string>Explore</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="selectFolderButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              background-color: #444; /* Gray button */
+              color: #ffffff; /* White text */
+              padding: 10px;
+              border-radius: 5px;
+              border: none;
+             </string>
+            </property>
+            <property name="text">
+             <string>Select Folder</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="exploreScrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="exploreScrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>906</width>
+             <height>695</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="exploreScrollAreaLayout"/>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="hateSpeechImagesPage">
+       <layout class="QVBoxLayout" name="hateSpeechImagesLayout">
+        <item>
+         <layout class="QHBoxLayout" name="hateSpeechImagesTitleLayout" stretch="0,1,1">
+          <item>
+           <widget class="QPushButton" name="menuButton">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              text-align: left;
+              color: #ffffff;
+              background-color: transparent;
+              padding: 10px;
+              border: none;
+              border-radius: 5px;
+             </string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>assets/menu_icon.png</normaloff>assets/menu_icon.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="hateSpeechImagesTitleLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>28</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              color: #ffffff; /* White text */
+              padding: 5px;
+              margin: 0;
+             </string>
+            </property>
+            <property name="text">
+             <string>Hate Speech Images</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="reportButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              background-color: #444; /* Gray button */
+              color: #ffffff; /* White text */
+              padding: 10px;
+              border-radius: 5px;
+              border: none;
+             </string>
+            </property>
+            <property name="text">
+             <string>Report</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="hateSpeechImagesScrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="hateSpeechImagesScrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>98</width>
+             <height>28</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="hateSpeechImagesScrollAreaLayout"/>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

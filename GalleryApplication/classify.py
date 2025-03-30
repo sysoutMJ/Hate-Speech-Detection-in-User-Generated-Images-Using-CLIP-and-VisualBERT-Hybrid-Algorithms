@@ -54,12 +54,16 @@ class HateSpeechDetector:
         self.model.eval()
         self.classification_head.eval()
 
+    def extract_text(self, image_path, confidence_threshold=0.1):
+        """Expose the preprocessor's text extraction method"""
+        return self.preprocessor.extract_text(image_path, confidence_threshold)
+
     def predict(self, image_path, text=None, threshold=0.6):
         """Predict whether the image contains hate speech."""
         
         # Extract text first
         if text is None:
-            text = self.preprocessor.extract_text_from_image(image_path)
+            text = self.preprocessor.extract_text(image_path)
         
         # Preprocess the inputs
         input_ids, attention_mask, fused_embeddings = self.preprocessor.preprocess(image_path, text)

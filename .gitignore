@@ -1,3 +1,5 @@
 thesisvenv/
 BlurredImages/
 __pycache__/
+best_model.pth
+Train/

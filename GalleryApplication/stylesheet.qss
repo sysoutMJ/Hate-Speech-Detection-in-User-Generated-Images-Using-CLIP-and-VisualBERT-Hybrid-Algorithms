@@ -1,0 +1,318 @@
+/* GLOBAL */
+    QMainWindow, QWidget {
+        background-color: #ffffff;
+    }
+
+    QPushButton {
+        background-color: #D4BEE4;
+        color: #1e1e1e;
+        border-radius: 5px;
+        padding: 8px;
+        font-family: "EXO Light";
+    }
+    QPushButton:hover {
+        background-color: #9B7EBD;
+    }
+    QLabel {
+        color: #1e1e1e;
+        font-family: "EXO Light";
+    }
+
+    QScrollBar:vertical, QScrollBar:horizontal {
+        background-color: transparent;
+        width: 8px;  /* Vertical scrollbar width */
+        height: 8px;  /* Horizontal scrollbar height */
+        border-radius: 4px;  /* Rounded corners for the scrollbar */
+        padding: 0px;
+    }
+
+    QScrollBar::handle:vertical, QScrollBar::handle:horizontal {
+        background-color: #d1d1d1;  /* Light gray handle */
+        border-radius: 4px;
+        min-height: 40px;  /* Minimum size for the handle */
+    }
+
+    QScrollBar::handle:vertical:hover, QScrollBar::handle:horizontal:hover {
+        background-color: #666666;  /* Darker gray when hovered */
+    }
+
+    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,
+    QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+        background: transparent;
+        border: none;
+    }
+
+    QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical,
+    QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+        background: transparent;
+        border: none;
+    }
+
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical,
+    QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+        background: transparent;
+    }
+/* -------------------------------------------------- */
+
+/* LEFTSIDEBAR */
+    QFrame#frm_leftSideBar {
+        background-color: #D4BEE4;
+        min-width: 197px; /* Full sidebar */
+        max-width: 197px;
+    }
+
+    QLabel#lbl_sideBar_Icon,
+    QPushButton#bttn_sideBar_Hamburger,
+    QPushButton#bttn_sideBar_Dashboard,
+    QPushButton#bttn_sideBar_Explore,
+    QPushButton#bttn_sideBar_HateSpeechImages,
+    QPushButton#bttn_sideBar_InferencePipeline,
+    QPushButton#bttn_sideBar_Settings {
+        background-color: #D4BEE4;
+        text-align: left;
+        font-family: "EXO Light";
+    }
+
+    QPushButton#bttn_sideBar_UserGuide {
+        background-color: rgb(175, 107, 223);
+        text-align: center;
+        font-family: "EXO Light";
+        font-size: 16px;
+    }
+
+    /* Icons Only View */
+    QFrame[collapsed="true"] {
+        /* min-width: 50px;
+        max-width: 50px; */
+    }
+
+    QPushButton[collapsed="true"] {
+        text-align: center; /* Center icon when collapsed */
+    }
+
+    QPushButton#bttn_sideBar_Hamburger:hover,
+    QPushButton#bttn_sideBar_Dashboard:hover,
+    QPushButton#bttn_sideBar_Explore:hover,
+    QPushButton#bttn_sideBar_HateSpeechImages:hover,
+    QPushButton#bttn_sideBar_InferencePipeline:hover,
+    QPushButton#bttn_sideBar_UserGuide:hover{
+        background-color: #9B7EBD; /* Color when hovering */
+    }
+/* -------------------------------------------------- */
+
+/* WELCOME PAGE */
+    QPushButton#bttn_GetStarted{
+        /* min-width: 150px;
+        max-width: 400px;
+        min-height: 25px;
+        max-height: 25px; */
+        margin-left: 400px;
+        margin-right: 400px;
+        width: 150px;
+        background-color: #3B1E54;
+        color: #ffffff;
+    }
+
+    QPushButton#bttn_GetStarted:hover{
+        background-color: #dcbcd6;
+    }
+
+    QLabel#lbl_NeuralJam {
+        font-family: "Rubik Glitch";
+        font-size: 50px;
+        qproperty-alignment: AlignCenter;
+    }
+
+    QLabel#lbl_Tagline {
+        font-family: "Jura";
+        font-size: 20px;
+        qproperty-alignment: AlignCenter;
+    }
+
+/* -------------------------------------------------- */
+
+/* GLOBAL (TO BE SEPERATED ONCE THE UI IS ALL DONE */
+    QPushButton#bttn_Explore,
+    QPushButton#bttn_GenerateReport {
+        background-color:rgb(212, 195, 225);
+        color: #000000;
+        font-size:16px;
+        
+    }
+
+    QPushButton#bttn_Explore:hover,
+    QPushButton#bttn_GenerateReport:hover {
+        background-color: #D4BEE4;
+        color: #ffffff;
+    }
+
+        /* For all frames to remove borders */
+    QFrame {
+        border: none;
+        background: transparent;
+    }
+
+    /* For specific frames that need background */
+    QFrame#frm_TotalImages,
+    QFrame#frm_TotalHSPercentage,
+    QFrame#frm_TotalHSImages,
+    QFrame#frm_TotalNHSImages {
+        border-radius: 10px;
+        font-size: 16px;
+    }
+
+    /* For labels in hate speech images page */
+    QLabel#img_HS_Sample,
+    QLabel#img_HS_Sample_2,
+    QLabel#img_HS_Sample_3,
+    QLabel#img_HS_Sample_4 {
+        background: transparent;
+        border: none;
+    }
+
+    /* Page Title Labels */
+    QLabel#lbl_Dashboard,
+    QLabel#lbl_Explore,
+    QLabel#lbl_HateSpeechImages,
+    QLabel#lbl_ExploredFolderPath {
+        font-family: "Rubik Glitch";
+    }
+/* -------------------------------------------------- */
+
+/* DASHBOARD */
+
+    /* For creating the look of the scanned folders  */
+    /* This is testing only.  */
+    QFrame#frm_folder1_example,
+    QFrame#frm_folder2_example,
+    QFrame#frm_folder3_example,
+    QFrame#frm_folder4_example,
+    QFrame#frm_folder5_example {
+        background-color: lightgray;
+    }
+
+    /* All frames of KPI Cards */
+    QFrame#frm_TotalImages,
+    QFrame#frm_TotalHSPercentage,
+    QFrame#frm_TotalHSImages,
+    QFrame#frm_TotalNHSImages {
+        border-radius: 10px;
+    }
+
+    /* For numbers */
+
+    QLabel#lbl_num_TotalImages,
+    QLabel#lbl_num_TotalHSPercentage,
+    QLabel#lbl_num_TotalHSImages,
+    QLabel#lbl_num_TotalNHSImages{
+        font-family:"EXO Light";
+        font-weight: bold;
+        font-size: 35px;
+    }
+
+    QLabel#lbl_num_TotalImages {
+        background-color:rgb(219, 130, 233);
+    }
+
+    QLabel#lbl_num_TotalHSPercentage{
+        background-color:rgb(168, 85, 213);
+    }
+    QLabel#lbl_num_TotalHSImages {
+        background-color:rgb(168, 85, 213);
+    }
+
+    QLabel#lbl_num_TotalNHSImages {
+        background-color: rgb(219, 130, 233);
+    }
+
+    /* YELLOW */
+
+    QFrame#frm_TotalImages,
+    QLabel#lbl_TotalImages {
+        background-color: rgb(219, 130, 233);
+        font-size: 15px;
+    }
+
+    /* RED */
+    QFrame#frm_TotalHSPercentage,
+    QLabel#lbl_TotalHSPercentage{
+        background-color: rgb(168, 85, 213);
+        font-size: 15px;
+    }
+
+    QFrame#frm_TotalHSImages,
+    QLabel#lbl_TotalHSImages{
+        background-color: rgb(168, 85, 213);
+        font-size: 15px;
+    }
+
+
+    /* GREEN */
+
+    QLabel#lbl_TotalNHHSImages,
+    QFrame#frm_TotalNHSImages {
+        background-color: rgb(219, 130, 233);
+        font-size: 15px;
+    }
+
+/* -------------------------------------------------- */
+
+/* EXPLORE */
+
+    QWidget#scrollArea_explr_Folders_Content{
+        border-radius: 4px;
+    }
+
+    QWidget#scrollArea_explr_Folders_Content,
+    QWidget#scrllArea_explr_AllImages_Content{
+        background-color:rgb(244, 232, 246);
+    }
+
+/* -------------------------------------------------- */
+
+/* EXPLORED FOLDER */
+
+    QFrame#frns_Folder_Summary,
+    QFrame#exploreFolder_lower {
+        background-color:rgb(223, 197, 227);
+    }
+
+    QWidget#scrllArea_exploredFolder_Content{
+        background-color:rgb(223, 197, 227);
+    }
+
+    QPushButton#bttn_Back{
+        background-color: #ffffff;
+    }
+
+    QPushButton#bttn_Back:hover{
+        background-color: #ffffff;
+    }
+
+    QPushButton#bttn_DeleteThisFolder {
+        text-align: center;
+        font-family: "EXO Light";
+        font-size: 16px;
+    }
+
+
+
+/* HATESPEECH IMAGES */
+    QWidget#scrllArea_hsImage_lower_scrollAreaWidgetContents{
+        background-color: rgb(223, 197, 227);
+    }
+/* -------------------------------------------------- */
+
+/* INFERENCE PIPELINE */
+
+QLabel#lbl_inferencePipeline{
+    font-family: "Rubik Glitch";
+}
+
+QTableWidget#ipo_table {
+    color: #000000;
+}
+
+QFrame#inferencePipeline_lower{
+    background-color: #D4BEE4;
+}

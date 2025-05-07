@@ -3,3 +3,5 @@ BlurredImages/
 __pycache__/
 best_model.pth
 Train/
+lr_3e09_epoch_121_best_hybrid_model.pth
+Model 2.0

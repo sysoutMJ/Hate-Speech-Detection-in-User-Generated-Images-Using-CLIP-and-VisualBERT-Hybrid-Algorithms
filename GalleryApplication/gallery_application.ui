@@ -45,7 +45,7 @@
           <string notr="true">c</string>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="page_Welcome">
           <property name="layoutDirection">
@@ -434,8 +434,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1134</width>
-                   <height>264</height>
+                   <width>1143</width>
+                   <height>285</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_5">
@@ -487,8 +487,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1134</width>
-                   <height>264</height>
+                   <width>1143</width>
+                   <height>284</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout"/>
@@ -558,8 +558,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1130</width>
-                   <height>608</height>
+                   <width>1143</width>
+                   <height>633</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_2">
@@ -731,8 +731,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>1128</width>
-                   <height>606</height>
+                   <width>98</width>
+                   <height>28</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_6"/>

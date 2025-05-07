@@ -13,13 +13,14 @@ QPushButton {
 }
 
 /* Page Title Labels */
-QLabel#lbl_Dashboard,
-QLabel#lbl_Explore,
-QLabel#lbl_HateSpeechImages,
-QLabel#lbl_ExploredFolderPath,
-QLabel#lbl_inferencePipeline {
-    font-family: "Rubik Glitch";
-}
+    QLabel#lbl_Dashboard,
+    QLabel#lbl_Explore,
+    QLabel#lbl_HateSpeechImages,
+    QLabel#lbl_ExploredFolderPath,
+    QLabel#lbl_inferencePipeline{
+        font-family: "Rubik Glitch";
+        font-size: 50px;
+    }
 
 /* Dashboard Numbers */
 QLabel#lbl_num_TotalImages,
@@ -146,26 +147,26 @@ QLabel#lbl_num_TotalNHSImages {
 QFrame#frm_TotalImages,
 QLabel#lbl_TotalImages {
     background-color:rgb(92, 167, 229);
-    font-size: 15px;
+    font-size: 20px;
 }
 
     /* RED */
 QFrame#frm_TotalHSPercentage,
 QLabel#lbl_TotalHSPercentage{
     background-color:  #4682B4;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 QFrame#frm_TotalHSImages,
 QLabel#lbl_TotalHSImages{
     background-color:  #4682B4;
-    font-size: 15px;
+    font-size: 20px;
 }
     /* GREEN */
 QLabel#lbl_TotalNHHSImages,
 QFrame#frm_TotalNHSImages {
     background-color:rgb(92, 167, 229);
-    font-size: 15px;
+    font-size: 20px;
 }
 
 /* EXPLORE PAGE */

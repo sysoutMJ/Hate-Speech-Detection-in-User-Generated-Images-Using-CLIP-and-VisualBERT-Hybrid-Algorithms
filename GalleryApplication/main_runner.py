@@ -1,10 +1,8 @@
 # main_runner.py (Merged Version)
 # This Python file uses the following encoding: utf-8
-
 import io
 import sys
 import os
-import easyocr
 import json
 import time
 from PyQt6.QtWidgets import (
@@ -19,16 +17,14 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QScrollArea,
     QMenu,
-    QTableWidget,
     QTableWidgetItem,
     QHeaderView,
-    QHBoxLayout,
     QTextEdit,
     QProgressBar,
     QSizePolicy,
 )
 from PyQt6.QtGui import QIcon, QPixmap, QAction, QMovie, QPainter, QColor
-from PyQt6.QtCore import Qt, QSize, QDateTime
+from PyQt6.QtCore import Qt, QSize, QDateTime, QTimer
 from PyQt6.uic import loadUi
 from PyQt6.QtCore import QThread, pyqtSignal
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -37,9 +33,17 @@ from classify import HateSpeechDetector
 from fpdf import FPDF
 from PIL import Image, ImageFilter
 import torch
+import warnings
+from easy_ocr import OCRExtractor
+from clip_and_hybrid_model import clip_and_hybrid_model
 
+warnings.filterwarnings("ignore", category=UserWarning, module="transformers")
+warnings.filterwarnings("ignore", category=FutureWarning)
+warnings.filterwarnings("ignore", message="Using a slow image processor.*")
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8")
 
+
+# region PATHS
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 GALLERY_UI_PATH = r"K:\Official_Thesis\GalleryApplication\gallery_application.ui"
 STYLESHEET_PATH = r"K:\Official_Thesis\GalleryApplication\stylesheet.qss"
@@ -58,7 +62,7 @@ MODEL_PATH = r"K:\Official_Thesis\best_model.pth"
 # Hamburger
 HAMBURGER_ICON = {
     "black": r"K:\Official_Thesis\GalleryApplication\assets\hamburgerIcon_black.png",
-    "white": r"K:\Official_Thesis\GalleryApplication\assets\hatespeechImage_white.png",
+    "white": r"K:\Official_Thesis\GalleryApplication\assets\hamburgerIcon_white.png",
 }
 
 # Sidebar Icons
@@ -93,15 +97,13 @@ BACK_ICON = r"K:\Official_Thesis\GalleryApplication\assets\back_black.png"
 # Data Files
 SCANNED_FOLDERS_FILE = "scanned_folders.json"
 
-SORT_BY_QSS = "font-size: 16px; color: #000000"
+# SORT_BY_QSS = "font-size: 16px; color: #000000"
 SORT_MENU_QSS = "color: #000000"
 USER_GUIDE_QSS = "font-size: 16px"  # Set text color to black
 USER_GUIDE_ICON_PATH = (
     r"K:\Official_Thesis\GalleryApplication\assets\information_blue.png"
 )
-
-# Add this near the top with other icon definitions
-# Make sure you have this icon file
+# endregion
 
 
 class ProcessingWorker(QThread):
@@ -115,9 +117,12 @@ class ProcessingWorker(QThread):
         self.folder_path = folder_path
         self.image_path = image_path
         self._is_running = True
+
         # Add system files to ignore
         self.SYSTEM_FILES = {"desktop.ini", "thumbs.db", ".ds_store"}
         self.ALLOWED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".bmp"}
+        self.easy_ocr = OCRExtractor()
+        self.hate_speech_detector = clip_and_hybrid_model()
 
     def stop(self):
         self._is_running = False
@@ -138,38 +143,41 @@ class ProcessingWorker(QThread):
         time_start = time.time()
 
         try:
+            detector = (
+                self.hate_speech_detector
+            )  # Avoid recreating the detector every time
+
             for root, _, files in os.walk(self.folder_path):
                 for file in files:
                     if not self._is_running:
                         return
 
-                    # Skip system files
                     if file.lower() in self.SYSTEM_FILES:
                         continue
 
-                    # Check if it's an actual image file
                     file_ext = os.path.splitext(file.lower())[1]
                     if file_ext in self.ALLOWED_EXTENSIONS:
                         file_path = os.path.join(root, file)
                         self.progress.emit(file_path)
 
-                        text = self.detector.extract_text(file_path)
-                        score = self.detector.predict(file_path, text)
+                        # OCR text extraction
+                        text = self.easy_ocr.extract_text(file_path)
+
+                        # Predict with image + text using adaptive fusion
+                        score = detector.predict_with_adaptive_fusion(
+                            image_path=file_path, text=text
+                        )
 
                         results.append({"path": file_path, "score": score})
                         if score > 0.5:
                             hate_speech_count += 1
                         total_images += 1
 
-            # Calculate elapsed time
             elapsed_time = time.time() - time_start
-
-            # Format elapsed time nicely
             minutes = int(elapsed_time // 60)
             seconds = int(elapsed_time % 60)
             processing_time = f"{minutes}m {seconds}s" if minutes > 0 else f"{seconds}s"
 
-            # Print detailed timing information to terminal
             print("\n" + "=" * 50)
             print("📊 Processing Summary:")
             print(f"⏱️ Total processing time: {processing_time}")
@@ -185,22 +193,26 @@ class ProcessingWorker(QThread):
             self.finished.emit(
                 {
                     "folder_path": self.folder_path,
-                    "total_images": total_images,  # This will now be accurate
+                    "total_images": total_images,
                     "hate_speech_count": hate_speech_count,
                     "results": results,
                 }
             )
 
         except Exception as e:
-            # If there's an error, still calculate elapsed time
             elapsed_time = time.time() - time_start
             self.error.emit(
                 f"Processing error after {elapsed_time:.1f} seconds: {str(e)}"
             )
 
     def process_single_image(self):
-        text = self.detector.extract_text(self.image_path)
-        score = self.detector.predict(self.image_path, text)
+        # text = self.detector.extract_text(self.image_path)
+        text = self.easy_ocr.extract_text(self.image_path)
+        # score = self.detector.predict(self.image_path, text)
+
+        score = self.hate_speech_detector.predict_with_adaptive_fusion(
+            image_path=self.image_path, text=text
+        )
 
         self.finished.emit(
             {
@@ -288,6 +300,19 @@ class GalleryApplication(QMainWindow):
         self.total_scanned_image_files = []
         self.total_scanned_hatespeech_images = []
         self.total_scanned_NOT_hatespeech_images = []
+        self.scanned_image_files = []
+        self.excluded_files = []
+        self.currently_explored_folder_path = []
+
+        """
+            Allowed image extensions and ignored system files
+        """
+        self.ALLOWED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".bmp", ".tiff"]
+        self.SYSTEM_FILES = [
+            "desktop.ini",
+            "thumbs.db",
+            ".ds_store",
+        ]  # Common system files to ignore
 
         # Remove User Guide button from sidebar layout
         for i in reversed(range(self.verticalLayout.count())):
@@ -297,33 +322,53 @@ class GalleryApplication(QMainWindow):
                 widget.deleteLater()
                 break
 
-        # Initialize app window title, icon, and theme manager
+        """
+            For
+                - App window title
+                - Icon
+                - Theme manager
+        """
         self.setWindowTitle("NeuralJAM")
         self.setWindowIcon(QIcon(NEURALJAM_LOGO))
+
+        # Get screen geometry
+        screen = QApplication.primaryScreen()
+        screen_size = screen.availableGeometry()
+
+        # Set window size to, for example, 80% of screen size
+        width = int(screen_size.width() * 0.8)
+        height = int(screen_size.height() * 0.8)
+        self.resize(width, height)
+
+        # Optionally center the window
+        self.move(
+            screen_size.x() + (screen_size.width() - width) // 2,
+            screen_size.y() + (screen_size.height() - height) // 2,
+        )
         self.theme_manager = ThemeManager(self)
 
-        # Load hate speech detector model
+        """
+            For hybrid model initialization and other instantiation
+        """
         try:
             self.detector = HateSpeechDetector(model_path=MODEL_PATH, device=DEVICE)
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to load model: {str(e)}")
             sys.exit(1)
 
+        self.easy_ocr = OCRExtractor()
+
+        # DUMMY BUTTONS
         # Hide example folder buttons
         self.bttn_ScannedFolder_Example_1.setVisible(False)
         self.bttn_ScannedFolder_Example_2.setVisible(False)
         self.bttn_ScannedFolder_Example_3.setVisible(False)
 
-        # Sidebar state and theme default setup
+        """
+            Sidebar state and theme default setup
+        """
         self.state_leftSideBar = False
         self.state_toggle_minfLeftSideBar = True
-
-        # Initialize image and folder tracking lists
-        self.folders = []
-        self.folder_data = {}
-        self.hate_speech_images = []
-        self.non_hate_speech_images = []
-
         self.sidebar_icon_button_mapping = {
             1: {
                 "bttn_name": "bttn_sideBar_Dashboard",
@@ -364,82 +409,25 @@ class GalleryApplication(QMainWindow):
 
         # Add Settings button to sidebar
         self.bttn_sideBar_Settings = QPushButton("   Settings", self.frm_leftSideBar)
+        self.bttn_sideBar_Settings.setIcon(QIcon(SIDEBAR_ICONS["settings"]["black"]))
+        self.bttn_sideBar_Settings.setIconSize(QSize(20, 20))
         self.bttn_sideBar_Settings.setObjectName("bttn_sideBar_Settings")
         self.bttn_sideBar_Settings.setIcon(
             QIcon(self.sidebar_icon_button_mapping[8]["icon_black"])
         )
         self.bttn_sideBar_Settings.setIconSize(QSize(20, 20))
+        self.bttn_sideBar_Settings.setVisible(True)
+        self.bttn_sideBar_Settings.clicked.connect(
+            self.show_theme_menu
+        )  # Connect settings button to show theme menu
         self.verticalLayout.insertWidget(7, self.bttn_sideBar_Settings)
-        # Insert before User Guide button
-
-        # Connect settings button to show theme menu
-        self.bttn_sideBar_Settings.clicked.connect(self.show_theme_menu)
-
-        self.ALLOWED_IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".bmp", ".tiff"]
-        self.SYSTEM_FILES = [
-            "desktop.ini",
-            "thumbs.db",
-            ".ds_store",
-        ]  # Common system files to ignore
-        self.total_scanned_image_files = []
-        self.scanned_image_files = []
-        self.total_scanned_hatespeech_images = []
-        self.total_scanned_NOT_hatespeech_images = []
-        self.excluded_files = []
-        self.currently_explored_folder_path = []
 
         self.bttn_sideBar_Hamburger.setIcon(QIcon(HAMBURGER_ICON["black"]))
         self.bttn_sideBar_Hamburger.setIconSize(QSize(20, 20))
-
-        # Set settings icon
-        self.bttn_sideBar_Settings.setIcon(QIcon(SIDEBAR_ICONS["settings"]["black"]))
-        self.bttn_sideBar_Settings.setIconSize(QSize(20, 20))
-
-        # Make sure both buttons are visible
         self.bttn_sideBar_Hamburger.setVisible(True)
-        self.bttn_sideBar_Settings.setVisible(True)
-
-        # UI Design related parts
-        self.theme_manager.load_theme("default")
 
         """
-            Welcome Page Part
-            
-            Initializes pagesStackedWidget index to 0.
-            Sets the visiblity of left side bar to False.
-        """
-        # False, so that left side bar does not show in welcome page
-        self.frm_leftSideBar.setVisible(self.state_leftSideBar)
-
-        self.pagesStackedWidget.setCurrentIndex(0)
-        self.bttn_GetStarted.clicked.connect(
-            self.switch_page_to_dashboard_and_toggle_leftSideBar_visiblity
-        )
-
-        # Note for designing:
-        #   This is crucial for buttons that have fixed sizing policy.
-        #   You need to set the alignment of the layout (of frame) where the button resides
-        #   in order for them to be centered and their margin (left and right) not to be moved.
-        # self.bttn_GetStarted.setFixedWidth(400) # This is in px
-        self.lbl_NeuralJam.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lbl_Tagline.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.verticalLayout_Page_Welcome.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.img_as_lbl_NeuralJAM_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.img_as_lbl_NeuralJAM_logo.setPixmap(QPixmap(NEURALJAM_LOGO))
-
-        # Set welcome page layout properties
-        welcome_container = self.findChild(QWidget, "Page_Welcome")
-        if welcome_container:
-            welcome_layout = welcome_container.layout()
-            if welcome_layout:
-                welcome_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                for i in range(welcome_layout.count()):
-                    item = welcome_layout.itemAt(i)
-                    if item.widget():
-                        item.widget().setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        """
-            LEFT SIDE BAR FUNCTIONS
+            SIDE BAR FUNCTIONS
         """
         self.bttn_sideBar_Dashboard.clicked.connect(
             lambda: self.pagesStackedWidget.setCurrentIndex(1)
@@ -459,11 +447,54 @@ class GalleryApplication(QMainWindow):
             self.update_button_colors_when_in_page
         )
 
+        """
+            FOR UI DESIGN THEME
+        """
+        self.theme_manager.load_theme("default")
+
+        """
+            Welcome Page Part
+            
+            Initializes pagesStackedWidget index to 0.
+            Sets the visiblity of left side bar to False.
+        """
+
+        self.frm_leftSideBar.setVisible(
+            self.state_leftSideBar
+        )  # False, so that left side bar does not show in welcome page
+        self.pagesStackedWidget.setCurrentIndex(0)
+        self.bttn_GetStarted.clicked.connect(
+            self.switch_page_to_dashboard_and_toggle_leftSideBar_visiblity
+        )
+
+        # ALIGNMENTS
+        self.lbl_NeuralJam.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lbl_Tagline.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.verticalLayout_Page_Welcome.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.img_as_lbl_NeuralJAM_logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.img_as_lbl_NeuralJAM_logo.setPixmap(QPixmap(NEURALJAM_LOGO))
+
+        # Set welcome page layout properties
+        welcome_container = self.findChild(QWidget, "Page_Welcome")
+        if welcome_container:
+            welcome_layout = welcome_container.layout()
+            if welcome_layout:
+                welcome_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                for i in range(welcome_layout.count()):
+                    item = welcome_layout.itemAt(i)
+                    if item.widget():
+                        item.widget().setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Processing Time
+        self.processing_timer = QTimer()
+        self.processing_timer.setSingleShot(True)
+        # self.processing_timer.timeout.connect(self.show_processing_delay_warning)
+
         # region DASHBOARD
         """
             DASHBOARD
         """
-        self.show_hate_speech_chart()
+        self.show_hate_speech_chart()  # Show bar chart
 
         # Add User Guide button to dashboard
         self.dashboard_user_guide_button = QPushButton(
@@ -479,7 +510,13 @@ class GalleryApplication(QMainWindow):
         # Add sorting dropdown before user guide button
         self.sort_dropdown = QPushButton("Sort By ▼", self.dshbrd_upper)
         self.sort_dropdown.setObjectName("sort_dropdown")
-        self.sort_dropdown.setStyleSheet(SORT_BY_QSS)  # Set text color to black
+        self.update_sort_dropdown_style()
+        # self.sort_dropdown.setStyleSheet(
+        #     f"""
+        #         font-size: 16px;
+        #         color: {"#f70000" if self.theme_manager.current_theme == "light_blue" else "#00ff77" if self.theme_manager.current_theme == "dark" else "#ff009d"};
+        #     """
+        # )
         self.horizontalLayout_2.insertWidget(
             self.horizontalLayout_2.count() - 1, self.sort_dropdown
         )
@@ -498,8 +535,6 @@ class GalleryApplication(QMainWindow):
         self.sort_menu.addAction(
             "Oldest", lambda: self.sort_dashboard_folders("oldest")
         )
-        # Theme-aware styling
-        self.apply_sort_menu_style()
 
         self.sort_dropdown.clicked.connect(
             lambda: self.sort_menu.exec(
@@ -602,11 +637,34 @@ class GalleryApplication(QMainWindow):
         self.bttn_Back.setIcon(QIcon(BACK_ICON))
         self.bttn_Back.setIconSize(QSize(20, 20))
 
+        # region END OF INIT
+
     """
         End of __init__
     """
 
-    def apply_sort_menu_style(self):
+    def update_sort_dropdown_style(self):
+        if not hasattr(self, "sort_dropdown"):
+            return  # Avoid error if not yet initialized
+
+        color = (
+            "#ffffff"  # for light blue
+            if self.theme_manager.current_theme == "light_blue"
+            else "#ffffff"  # for dark
+            if self.theme_manager.current_theme == "dark"
+            else "#000000"  # for default
+        )
+        self.sort_dropdown.setStyleSheet(
+            f"""
+                font-size: 16px;
+                color: {color};
+            """
+        )
+
+    def update_sort_menu_style(self):
+        if not hasattr(self, "sort_menu"):
+            return  # Avoid error if not yet initialized
+
         self.sort_menu.setStyleSheet(f"""
             QMenu {{
                 background-color: {"#F0F8FF" if self.theme_manager.current_theme == "light_blue" else "#2D2D2D" if self.theme_manager.current_theme == "dark" else "#FFFFFF"};
@@ -685,8 +743,18 @@ class GalleryApplication(QMainWindow):
         current_page = self.pagesStackedWidget.currentIndex()
         guide_text = ""
 
+        common_style = """
+            <style>
+                body { font-size: 16px; font-family: Arial, sans-serif; }
+                h2 { font-size: 20px; margin-bottom: 10px; }
+                ul { margin-top: 0; padding-left: 20px; }
+                li { margin-bottom: 5px; }
+            </style>
+        """
+
         if current_page == 1:  # Dashboard
-            guide_text = """
+            guide_text = f"""
+            {common_style}
             <h2>Dashboard User Guide</h2>
             <p>The Dashboard provides an overview of your hate speech detection results:</p>
             <ul>
@@ -696,7 +764,8 @@ class GalleryApplication(QMainWindow):
             </ul>
             """
         elif current_page == 2:  # Explore
-            guide_text = """
+            guide_text = f"""
+            {common_style}
             <h2>Explore User Guide</h2>
             <p>The Explore module lets you browse all scanned images:</p>
             <ul>
@@ -706,7 +775,8 @@ class GalleryApplication(QMainWindow):
             </ul>
             """
         elif current_page == 3:  # Hate Speech Images
-            guide_text = """
+            guide_text = f"""
+            {common_style}
             <h2>Hate Speech Images User Guide</h2>
             <p>This module shows all detected hate speech images:</p>
             <ul>
@@ -716,7 +786,8 @@ class GalleryApplication(QMainWindow):
             </ul>
             """
         elif current_page == 4:  # IPO Module
-            guide_text = """
+            guide_text = f"""
+            {common_style}
             <h2>IPO Module User Guide</h2>
             <p>The Input-Process-Output module shows the detection pipeline:</p>
             <ul>
@@ -726,7 +797,8 @@ class GalleryApplication(QMainWindow):
             </ul>
             """
         elif current_page == 5:  # Explored Folder
-            guide_text = """
+            guide_text = f"""
+            {common_style}
             <h2>Explored Folder User Guide</h2>
             <p>This view shows contents of a specific folder:</p>
             <ul>
@@ -787,6 +859,15 @@ class GalleryApplication(QMainWindow):
             # Update button colors
             self.update_button_colors_when_in_page(1)
             print("Successfully switched to dashboard")
+            self.show_custom_popup(
+                title="Message",
+                message="""
+<span style="font-size:28px;">⚠️</span><br><br>
+<b><span style="font-size:20px;">Bar Chart data are only dummy.</span></b><br><br>
+<span style="font-size:16px;">Please explore folders first through the <b>"Explore"</b> page.</span><br><br>
+<span style="font-size:16px; color: #666666;">This chart is displayed using placeholder values and does not reflect real data until folders are analyzed.</span>
+""",
+            )
         except Exception as e:
             print(f"Error during page switch: {str(e)}")
             QMessageBox.critical(self, "Error", f"Failed to switch pages: {str(e)}")
@@ -909,6 +990,9 @@ class GalleryApplication(QMainWindow):
             self.bttn_sideBar_Settings.setIcon(
                 QIcon(self.sidebar_icon_button_mapping[8]["icon_black"])
             )
+
+        self.update_sort_dropdown_style()
+        self.update_sort_menu_style()
         # Store the new active index
         self.previous_active_index = index
 
@@ -917,9 +1001,9 @@ class GalleryApplication(QMainWindow):
     # region CHART
     def show_hate_speech_chart(self):
         # Dummy data
-        folders = [""]
-        hate_speech_perc = [""]
-        not_hate_speech_perc = [""]
+        folders = ["Folder A", "Folder B", "Folder C", "Folder D"]
+        hate_speech_perc = [35, 50, 20, 60]  # Percentages of hate speech
+        not_hate_speech_perc = [65, 50, 80, 40]  # Percentages of not hate speech
 
         layout = self.frm_chart.layout()
         while layout.count():
@@ -945,14 +1029,14 @@ class GalleryApplication(QMainWindow):
             hate_speech_perc,
             width=bar_width,
             label="Hate Speech",
-            color="#a855d5",  # Purple
+            color="#FF0000",  # Purple
         )
         ax.bar(
             [i + bar_width / 2 for i in x],
             not_hate_speech_perc,
             width=bar_width,
             label="Not Hate Speech",
-            color="#3b82f6",  # Blue
+            color="#008000",  # Green
         )
 
         ax.set_xticks(x)
@@ -1002,23 +1086,37 @@ class GalleryApplication(QMainWindow):
 
     # --------------------------------------------------------------------------------------------------------
 
-    # Replace browse_folders method to show folder/image choice
-
     def browse_folders(self):
         """Complete folder/image selection from old app"""
         dialog = QDialog(self)
         dialog.setWindowTitle("Select Input Type")
+        dialog.setMinimumSize(600, 400)
 
         layout = QVBoxLayout(dialog)
 
         folder_btn = QPushButton("Select Folder")
         single_btn = QPushButton("Select Single Image")
 
+        # Style and size policies
+        for btn in [folder_btn, single_btn]:
+            btn.setStyleSheet("font-size: 18px; font-weight: bold;")
+            btn.setSizePolicy(
+                QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+            )
+            btn.setMinimumHeight(100)  # Optional: gives them a base size
+
+        # Increase font size
+        folder_btn.setStyleSheet("font-size: 18px;")
+        single_btn.setStyleSheet("font-size: 18px;")
+
         folder_btn.clicked.connect(lambda: self.handle_folder_selection(dialog))
         single_btn.clicked.connect(lambda: self.handle_single_image_selection(dialog))
 
         layout.addWidget(folder_btn)
         layout.addWidget(single_btn)
+
+        layout.setSpacing(20)  # Optional: spacing between buttons
+        layout.setContentsMargins(20, 20, 20, 20)
 
         dialog.exec()
 
@@ -1084,6 +1182,7 @@ class GalleryApplication(QMainWindow):
         self.update_explore()
 
     # --------------------------------------------------------------------------------------------------------
+
     def on_processing_progress(self, file_path):
         if hasattr(self, "progress_bar") and self.progress_bar:
             if not hasattr(self, "total_files_count") or self.total_files_count == 0:
@@ -1105,6 +1204,7 @@ class GalleryApplication(QMainWindow):
             self.current_file_label.setText(f"Processing: {filename}")
 
     def on_processing_finished(self, folder_result):
+        self.processing_timer.stop()
         try:
             folder_path = folder_result["folder_path"]
             total_images = folder_result["total_images"]
@@ -1580,66 +1680,55 @@ class GalleryApplication(QMainWindow):
     """
 
     def show_custom_popup(self, title, message):
+        # Create overlay
         self.overlay = QWidget(self)
         self.overlay.setGeometry(self.rect())  # Full window size
         self.overlay.setStyleSheet(
             "background-color: rgba(0, 0, 0, 120); font-size: 16px;"
-        )  # Semi-transparent black
-        self.overlay.setAttribute(
-            Qt.WidgetAttribute.WA_TransparentForMouseEvents
-        )  # Allow clicks to pass if needed
+        )
+        self.overlay.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.overlay.show()
 
+        # Create modal dialog
         dialog = QDialog(self)
         dialog.setWindowTitle(title)
         dialog.setModal(True)
         dialog.setFixedSize(600, 400)
 
-        layout = QVBoxLayout(dialog)
+        main_layout = QVBoxLayout()  # Create layout first
 
+        # Scrollable message area
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
 
         content_widget = QWidget()
-        content_layout = QVBoxLayout()
+        content_layout = QVBoxLayout(content_widget)
 
         lbl_message = QLabel(message)
-        lbl_message.setWordWrap(False)
-        layout.addWidget(lbl_message)
-
+        lbl_message.setText(message)  # Pass the HTML content here
+        lbl_message.setWordWrap(True)
         content_layout.addWidget(lbl_message)
-        content_widget.setLayout(content_layout)
+
         scroll.setWidget(content_widget)
+        main_layout.addWidget(scroll)
 
-        layout.addWidget(scroll)
-
+        # OK button
         btn_ok = QPushButton("OK")
         btn_ok.clicked.connect(dialog.accept)
-        layout.addWidget(btn_ok)
+        main_layout.addWidget(btn_ok)
 
-        theme = ThemeManager(self).current_theme
-        dialog.setStyleSheet(
-            theme
-            #     """
-            #     QDialog {
-            #         background-color: #ffffff;
-            #     }
-            #     QLabel {
-            #         color: black;
-            #         font-size: 14px;
-            #     }
-            #     QPushButton {
-            #         background-color: #8A2BE2;
-            #         color: white;
-            #         padding: 6px 12px;
-            #         border-radius: 6px;
-            #     }
-            #     QPushButton:hover {
-            #         background-color: #A020F0;
-            #     }
-            # """
-        )
+        dialog.setLayout(main_layout)
 
+        # Apply theme and font size
+        # theme = ThemeManager(self).current_theme
+        dialog.setStyleSheet("""
+            * {
+                font-family: "EXO Light";
+                font-size: 20px;
+            }
+        """)
+
+        # Show dialog
         dialog.exec()
 
         self.overlay.hide()
@@ -1848,6 +1937,7 @@ class GalleryApplication(QMainWindow):
             self.worker.finished.connect(self.on_processing_finished)
             self.worker.error.connect(self.on_processing_error)
 
+            self.processing_timer.start(5000)
             self.worker.start()
 
             # Update IPO table for each image
@@ -1883,6 +1973,7 @@ class GalleryApplication(QMainWindow):
             self.worker = ProcessingWorker(self.detector, image_path=image_path)
             self.worker.finished.connect(self.on_single_image_finished)
             self.worker.error.connect(self.on_processing_error)
+            self.processing_timer.start(5000)
             self.worker.start()
 
         except Exception as e:
@@ -2296,7 +2387,7 @@ class GalleryApplication(QMainWindow):
             empty_label.setStyleSheet("""
                 QLabel {
                     color: #666666;
-                    font-size: 14px;
+                    font-size: 20px;
                     font-family: Arial;
                     padding: 20px;
                     background: transparent;
@@ -2327,6 +2418,7 @@ class GalleryApplication(QMainWindow):
                 error_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 layout.addWidget(error_label, row, col)
 
+    # region GENERATE REPORT
     def generate_report(self):
         try:
             pdf = FPDF()
@@ -2492,13 +2584,29 @@ class GalleryApplication(QMainWindow):
         except Exception as e:
             self.show_custom_popup("Error", f"Failed to generate report:\n{str(e)}")
 
+    # region IPO
     def update_ipo_table(self):
-        """Complete IPO table update with better formatting"""
+        """Complete IPO table update with simplified grid styling"""
         self.ipo_table.setRowCount(0)
 
         # Configure table properties
         self.ipo_table.setColumnCount(3)
         self.ipo_table.setHorizontalHeaderLabels(["Input", "Process", "Output"])
+
+        # Use built-in grid styling
+        self.ipo_table.setShowGrid(True)
+        self.ipo_table.setStyleSheet("""
+            QHeaderView::section {
+                background-color: #F8FAFC;
+                color: #000000;
+                font-family: "Jura";
+                font-size: 18px;
+                font-weight: bold;
+                padding: 4px;
+            }
+        """)
+
+        # Configure column resize modes
         self.ipo_table.horizontalHeader().setSectionResizeMode(
             0, QHeaderView.ResizeMode.Fixed
         )
@@ -2509,19 +2617,10 @@ class GalleryApplication(QMainWindow):
             2, QHeaderView.ResizeMode.Fixed
         )
 
-        # region IPOHEADER
-        self.ipo_table.horizontalHeader().setStyleSheet(
-            "QHeaderView::section {"
-            "background-color: #1E1E1E; "  # ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-            "font-size: 15px; "
-            "font-weight: bold; "
-            "padding: 4px; }"
-        )
-
+        # Set column widths
         self.ipo_table.setColumnWidth(0, 250)  # Input column width
         self.ipo_table.setColumnWidth(2, 250)  # Output column width
-        # Enable text wrapping
-        self.ipo_table.setWordWrap(True)
+        self.ipo_table.setWordWrap(True)  # Enable text wrapping
 
         # Collect all image data
         all_images = []
@@ -2550,6 +2649,8 @@ class GalleryApplication(QMainWindow):
             input_container = QWidget()
             input_layout = QVBoxLayout(input_container)
             input_layout.setContentsMargins(5, 5, 5, 5)
+            input_container.setStyleSheet("background-color: #F8FAFC;")
+
             input_label = QLabel()
             try:
                 pixmap = QPixmap(img_data["path"])
@@ -2561,42 +2662,42 @@ class GalleryApplication(QMainWindow):
                 input_label.setText(f"Error loading image\n{str(e)}")
 
             input_layout.addWidget(input_label)
-            input_container.setLayout(input_layout)
-            self.ipo_table.setCellWidget(row, 0, input_label)
+            self.ipo_table.setCellWidget(row, 0, input_container)
 
-            # Process column - information with scrollable text
+            # Process column - information
             process_widget = QWidget()
             process_layout = QVBoxLayout(process_widget)
+            process_widget.setStyleSheet("background-color: #F8FAFC;")
 
             process_text_edit = QLabel()
             process_text_edit.setWordWrap(True)
             process_text_edit.setStyleSheet("""
-                QTextEdit {
+                QLabel {
                     background-color: #F8FAFC;
-                    border: 1px solid #BCCCDC;
-                    font-family: Consolas, monospace;
-                    font-size: 14px;
+                    font-family: "Jura";
+                    font-size: 16px;
                     color: #000000;
                     padding: 10px;
-                    line-height: 1.5;            
+                    line-height: 1.5;
                 }
             """)
 
             # Add the formatted text
-            process_text = "<pre style='font-size: 14pt;'>"  # Start with pre tag to preserve formatting
+            process_text = "<pre style='font-size: 14pt;'>"
             process_text += "PROCESSING INFORMATION:\n"
             process_text += f"📄 File: {os.path.basename(img_data['path'])}\n"
 
             if img_data["type"] == "folder":
                 process_text += f"📁 Folder: {os.path.basename(os.path.dirname(img_data['path']))}\n\n"
 
-            # Add Text Extraction section
             process_text += "TEXT EXTRACTION:\n"
             process_text += "🔍 Performing OCR text extraction...\n"
-            text = self.detector.extract_text(img_data["path"])
+
+            # text = self.detector.extract_text(img_data["path"])
+            text = self.easy_ocr.extract_text(img_data["path"])
+
             process_text += f"📝 Extracted Text:\n{text}\n\n"
 
-            # Hate Speech Analysis section
             process_text += "HATE SPEECH ANALYSIS:\n"
             process_text += f"📊 Prediction Score: {img_data['score']:.4f}\n"
             process_text += f"🚨 Conclusion: {'HATE SPEECH DETECTED' if img_data['score'] > 0.5 else 'No hate speech detected'}\n"
@@ -2604,35 +2705,58 @@ class GalleryApplication(QMainWindow):
 
             process_text_edit.setText(process_text)
             process_layout.addWidget(process_text_edit)
-            process_layout.setContentsMargins(0, 0, 0, 0)  # Remove margins
-            process_widget.setLayout(process_layout)
-
+            process_layout.setContentsMargins(0, 0, 0, 0)
             self.ipo_table.setCellWidget(row, 1, process_widget)
-            self.ipo_table.resizeRowToContents(row)
 
             # Output column - blurred if hate speech
+            output_widget = QWidget()
+            output_layout = QVBoxLayout(output_widget)
+            output_layout.setContentsMargins(5, 5, 5, 5)
+            output_widget.setStyleSheet("background-color: #F8FAFC;")
+
+            # Status Label
+            is_hate = img_data["score"] > 0.5
+            status_label = QLabel("🚨 HATE SPEECH" if is_hate else "✅ CLEAN")
+            status_label.setFixedHeight(20)
+            status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            status_label.setStyleSheet(
+                f"""
+                background-color: #F8FAFC;
+                font-weight: bold;
+                font-family: "Jura";
+                color: {"red" if is_hate else "green"};
+                font-size: 16px;
+                padding: 3px;
+                """
+            )
+            output_layout.addWidget(status_label)
+
+            # Image Label
             output_label = QLabel()
             try:
-                if img_data["score"] > 0.5:
-                    # Apply blur
+                if is_hate:
                     image = Image.open(img_data["path"])
                     if image.mode != "RGB":
                         image = image.convert("RGB")
                     blurred_image = image.filter(ImageFilter.GaussianBlur(radius=10))
                     blurred_image.save("temp_blurred.jpg")
-                    output_pixmap = QPixmap("temp_blurred.jpg").scaled(
-                        240, 240, Qt.AspectRatioMode.KeepAspectRatio
-                    )
+                    output_pixmap = QPixmap("temp_blurred.jpg")
                 else:
-                    # Show original
-                    output_pixmap = QPixmap(img_data["path"]).scaled(
-                        240, 240, Qt.AspectRatioMode.KeepAspectRatio
-                    )
+                    output_pixmap = QPixmap(img_data["path"])
+
+                output_pixmap = output_pixmap.scaled(
+                    240, 240, Qt.AspectRatioMode.KeepAspectRatio
+                )
                 output_label.setPixmap(output_pixmap)
                 output_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             except Exception as e:
                 output_label.setText(f"Error loading image\n{str(e)}")
-            self.ipo_table.setCellWidget(row, 2, output_label)
+
+            output_layout.addWidget(output_label)
+            self.ipo_table.setCellWidget(row, 2, output_widget)
+
+            # Set row height based on content
+            self.ipo_table.setRowHeight(row, process_widget.sizeHint().height() + 10)
 
     def add_ipo_row(self, image_path, folder=None):
         try:
@@ -2663,8 +2787,8 @@ class GalleryApplication(QMainWindow):
             process_log.setStyleSheet("""
                 QTextEdit {
                     background-color: #F8FAFC;
-                    border: 1px solid #BCCCDC;
-                    font-family: Consolas, monospace;
+                    border: 0.5px solid #000000;
+                    font-family: "Jura";
                     font-size: 14px;
                     color: #000000;
                     padding: 5px;
@@ -2687,7 +2811,8 @@ class GalleryApplication(QMainWindow):
                 process_log.append("│          TEXT EXTRACTION         │")
                 process_log.append("└──────────────────────────────────┘")
                 process_log.append("\n🔍 Performing OCR text extraction...")
-                text = self.detector.extract_text(image_path)
+                # text = self.detector.extract_text(image_path)
+                text = self.easy_ocr.extract_text(image_path)
                 process_log.append(f"\n📝 Extracted Text:\n{text}")
 
                 # Prediction Section
@@ -2748,11 +2873,15 @@ class GalleryApplication(QMainWindow):
             is_hate_speech = self.image_data[image_path]["is_hate_speech"]
             status_label = QLabel("🚨 HATE SPEECH" if is_hate_speech else "✅ CLEAN")
             status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            status_label.setStyleSheet(f"""
+            status_label.setStyleSheet(
+                """
                 font-weight: bold; 
-                color: {"red" if is_hate_speech else "green"};
-                font-size: 14px;
-            """)
+                font-family: "Jura";
+                color: {color};
+                font-size: 16px;
+                padding: 3px;
+            """.format(color="red" if is_hate_speech else "green")
+            )
             output_layout.addWidget(status_label)
 
             output_label = QLabel()
@@ -2774,6 +2903,7 @@ class GalleryApplication(QMainWindow):
             output_label.setPixmap(output_pixmap)
             output_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             output_layout.addWidget(output_label)
+            output_widget.setLayout(output_layout)
 
             self.ipo_table.setCellWidget(row, 2, output_widget)
 
@@ -2782,30 +2912,9 @@ class GalleryApplication(QMainWindow):
             error_item.setForeground(QColor("red"))
             self.ipo_table.setItem(row, 1, error_item)
 
-        def closeEvent(self, event):
-            # Stop any running workers
-            if hasattr(self, "worker") and self.worker.isRunning():
-                self.worker.stop()
-                self.worker.wait()
-
-            # Clear temporary files
-            temp_files = ["temp_blurred.jpg", "temp_processed.jpg"]
-            for temp_file in temp_files:
-                if os.path.exists(temp_file):
-                    try:
-                        os.remove(temp_file)
-                    except Exception as e:
-                        print(f"Error removing {temp_file}: {e}")
-
-            # Clear the JSON file
-            try:
-                open("scanned_folders.json", "w").close()
-            except Exception as e:
-                print(f"Error clearing scanned_folders.json: {e}")
-
-            event.accept()
-
+    # region FUNCTIONS
     def on_single_image_finished(self, result):
+        self.processing_timer.stop()
         try:
             if hasattr(self, "loading_dialog"):
                 self.loading_dialog.close()
@@ -2869,8 +2978,8 @@ class GalleryApplication(QMainWindow):
         """)
 
         # Scale the pixmap to fit while maintaining aspect ratio
-        scaled_pixmap = self.crop_and_scale_pixmap(pixmap, size[0] - 10, size[1] - 10)
-        label.setPixmap(scaled_pixmap)
+        # scaled_pixmap = self.crop_and_scale_pixmap(pixmap, size[0] - 10, size[1] - 10)
+        label.setPixmap(pixmap)
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         return label
@@ -2880,33 +2989,42 @@ class GalleryApplication(QMainWindow):
         if folder_path in self.folders:
             self.folders.remove(folder_path)
 
-        # Remove images from all tracking lists
+        # Remove images from all tracking lists - only those that are actually in the folder
         self.total_scanned_image_files = [
             img
             for img in self.total_scanned_image_files
-            if not img.startswith(folder_path)
+            if not (img.startswith(folder_path) and os.path.dirname(img) != folder_path)
         ]
+
         self.total_scanned_hatespeech_images = [
             img
             for img in self.total_scanned_hatespeech_images
-            if not img.startswith(folder_path)
+            if not (img.startswith(folder_path) and os.path.dirname(img) != folder_path)
         ]
+
         self.total_scanned_NOT_hatespeech_images = [
             img
             for img in self.total_scanned_NOT_hatespeech_images
-            if not img.startswith(folder_path)
+            if not (img.startswith(folder_path) and os.path.dirname(img) != folder_path)
         ]
 
         # Remove from hate speech and non-hate speech lists
         self.hate_speech_images = [
             img
             for img in self.hate_speech_images
-            if not img["path"].startswith(folder_path)
+            if not (
+                img["path"].startswith(folder_path)
+                and os.path.dirname(img["path"]) != folder_path
+            )
         ]
+
         self.non_hate_speech_images = [
             img
             for img in self.non_hate_speech_images
-            if not img["path"].startswith(folder_path)
+            if not (
+                img["path"].startswith(folder_path)
+                and os.path.dirname(img["path"]) != folder_path
+            )
         ]
 
         # Clear folder data
@@ -3048,6 +3166,16 @@ class GalleryApplication(QMainWindow):
 
         # Update the chart to reflect the new order
         self.update_dashboard_chart()
+
+    # def show_processing_delay_warning(self):
+    #     reply = QMessageBox.question(
+    #         self,
+    #         "Long Processing Time",
+    #         "Processing is taking longer than expected.\nWould you like to continue?",
+    #         QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+    #     )
+    #     if reply == QMessageBox.StandardButton.No:
+    #         self.cancel_folder_processing()
 
 
 if __name__ == "__main__":

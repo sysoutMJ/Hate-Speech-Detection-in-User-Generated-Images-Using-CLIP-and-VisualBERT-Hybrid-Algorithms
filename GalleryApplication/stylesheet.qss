@@ -309,6 +309,14 @@
     QWidget#scrllArea_hsImage_lower_scrollAreaWidgetContents{
         background-color: rgb(223, 197, 227);
     }
+
+
+QLabel#lblFilterBy,
+QLabel#lblGroupBy,
+QLabel#lblSortBy{
+    font-family: "EXO Light";
+    font-size: 16px;
+    }
 /* -------------------------------------------------- */
 
 /* INFERENCE PIPELINE */

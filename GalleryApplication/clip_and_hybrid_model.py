@@ -18,6 +18,10 @@ warnings.filterwarnings("ignore", message="Using a slow image processor.*")
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+"""
+    ℹ️ [MAIN FILE]
+"""
+
 
 class TextProcessor:
     def __init__(self):
@@ -83,20 +87,6 @@ def use_CLIP_only(image_path, device=DEVICE):
     clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)
     clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
-    # Define prompts
-    # hatespeech_prompts = [
-    #     "hate speech about animal",
-    #     "hate speech about society",
-    #     "hate speech about individual",
-    #     "hate speech about religion",
-    # ]
-    # notHatespeech_prompts = [
-    #     "contains about animal but no hate speech",
-    #     "contains about society but no hate speech",
-    #     "contains about individual but no hate speech",
-    #     "contains about religion but no hate speech",
-    # ]
-
     hatespeech_prompts = [
         "An image that promotes hate, racism, or violence",
         "A meme with racist, xenophobic, or sexist language",
@@ -124,8 +114,19 @@ def use_CLIP_only(image_path, device=DEVICE):
         "A social justice slogan or movement post",
         "A peaceful protest image without offensive content",
         "A parody that criticizes hate speech without using it",
+        "A random meme or post unrelated to hate",
+        "A personal photo or harmless image",
+        "An image of nature or everyday objects",
+        "A social post with no offensive content",
+        "A peaceful protest supporting equality",
+        "An educational infographic",
+        "An artistic or satirical expression",
+        "A humorous meme with no hateful message",
+        "An awareness post about social issues",
+        "A motivational or inspirational quote",
     ]
 
+    # Combine prompts for processing
     prompts = hatespeech_prompts + notHatespeech_prompts
 
     # Preprocess inputs
@@ -139,28 +140,50 @@ def use_CLIP_only(image_path, device=DEVICE):
         logits_per_image = outputs.logits_per_image  # shape: [1, num_prompts]
         probs = F.softmax(logits_per_image, dim=1)  # normalized probabilities
 
-        # Pair each prompt with its probability
-        scores = list(zip(prompts, probs[0].tolist()))
-        sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)
+        # Create score lists for each category
+        hate_scores = []
+        not_hate_scores = []
 
-        # Print top scores for debug
-        # print("Top CLIP Prompt Scores:")
-        # for prompt, score in sorted_scores:
-        #     print(f"{score:.4f} -> {prompt}")
+        # Populate score lists correctly
+        for i, prompt in enumerate(prompts):
+            score = probs[0][i].item()
+            if prompt in hatespeech_prompts:
+                hate_scores.append((prompt, score))
+            else:
+                not_hate_scores.append((prompt, score))
 
-        # Get the best prompt
-        best_prompt, best_score = sorted_scores[0]
-        # Output: True or False
-        is_hatespeech = best_prompt in hatespeech_prompts
+        # Find top prompts in each category
+        top_hate_prompt, top_hate_score = max(hate_scores, key=lambda x: x[1])
+        top_not_hate_prompt, top_not_hate_score = max(
+            not_hate_scores, key=lambda x: x[1]
+        )
 
-        # print(is_hatespeech)
-        # print(f"\nPrediction: {'HATE SPEECH' if is_hatespeech else 'NOT HATE SPEECH'}")
-        # print(f"Confidence Score: {best_score:.4f}")
+        # Determine overall prediction based on highest score
+        if top_hate_score > top_not_hate_score:
+            is_hatespeech = True
+            confidence = top_hate_score
+        else:
+            is_hatespeech = False
+            confidence = top_not_hate_score
+
+        # Always select the interpretation from the appropriate list
+        if is_hatespeech:
+            top_prompt = top_hate_prompt
+        else:
+            top_prompt = top_not_hate_prompt
+
+        # Get overall top scores for debugging
+        all_scores = hate_scores + not_hate_scores
+        sorted_scores = sorted(all_scores, key=lambda x: x[1], reverse=True)
 
         return {
             "prediction": int(is_hatespeech),
-            "confidence": best_score,
-            "top_prompt": best_prompt,
+            "confidence": confidence,
+            "top_prompt": top_prompt,
+            "top_hate_prompt": top_hate_prompt,
+            "top_hate_score": top_hate_score,
+            "top_not_hate_prompt": top_not_hate_prompt,
+            "top_not_hate_score": top_not_hate_score,
         }
 
 
@@ -211,9 +234,9 @@ class clip_and_hybrid_model:
         model_path = r"K:\0505\lr_2e-5_1.1_0506_best_model.pth"
 
         # Load CLIP model results
-        result = use_CLIP_only(image_path)
-        clip_pred = result["prediction"]
-        clip_conf = result["confidence"]
+        clip_result = use_CLIP_only(image_path)
+        clip_pred = clip_result["prediction"]
+        clip_conf = clip_result["confidence"]
 
         # Load Hybrid model results
         hybrid_result = predict_single_input(
@@ -228,13 +251,24 @@ class clip_and_hybrid_model:
         image_weight = 0.8
         text_weight = 0.2
 
+        # Determine final prediction and confidence
         if hybrid_pred == clip_pred:
+            final_pred = clip_pred
             final_confidence = max(clip_conf, hybrid_conf)
         else:
             weighted_score = (clip_conf * image_weight) + (hybrid_conf * text_weight)
             final_confidence = weighted_score
+            # Use hybrid model's prediction as the final prediction when models disagree
+            # You can modify this logic if needed
+            final_pred = 1 if final_confidence >= 0.5 else 0
 
-        return final_confidence
+        # Select interpretation based on final prediction
+        if final_pred == 1:  # Hate speech
+            interpretation = clip_result["top_hate_prompt"]
+        else:  # Not hate speech
+            interpretation = clip_result["top_not_hate_prompt"]
+
+        return final_confidence, interpretation
 
 
 # class clip_and_hybrid_model:

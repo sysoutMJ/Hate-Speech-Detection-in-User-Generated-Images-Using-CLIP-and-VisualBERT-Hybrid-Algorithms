@@ -1,4 +1,9 @@
 import easyocr
+# import argparse
+
+"""
+    ℹ️ [MAIN FILE]
+"""
 
 
 class OCRExtractor:
@@ -78,8 +83,15 @@ class OCRExtractor:
 
 
 # if __name__ == "__main__":
-#     image_path = (
-#         r"C:\Users\genes\Pictures\Tagalog Memes\c40a63639f45c9ae9278261b2b64f4e8.jpg"
-#     )
+#     # image_path = r"C:\Users\genes\Downloads\Parameters (2).png"
 
-#     extract_text_using_easyocr(image_path)
+#     # text = OCRExtractor().extract_text(image_path)
+#     # print(text)
+
+#     parser = argparse.ArgumentParser(description="EASY OCR Text Extraction System")
+#     parser.add_argument("image_path", help="Image file path or directory")
+
+#     args = parser.parse_args()
+
+#     text = OCRExtractor().extract_text(args.image_path)
+#     print(text)

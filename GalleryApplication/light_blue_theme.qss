@@ -223,6 +223,13 @@ QWidget#scrllArea_hsImage_lower_scrollAreaWidgetContents {
     background-color: #d0e4f5;
 }
 
+QLabel#lblFilterBy,
+QLabel#lblGroupBy,
+QLabel#lblSortBy{
+    font-family: "EXO Light";
+    font-size: 16px;
+}
+
 /* DIALOG BOXES */
 QDialog {
     background-color: #F0F8FF;

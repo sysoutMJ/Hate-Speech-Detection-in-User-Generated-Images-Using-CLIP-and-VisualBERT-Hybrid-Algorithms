@@ -1,0 +1,306 @@
+2025-05-13 01:37:03,052 [INFO] Theme changed to: default
+2025-05-13 01:44:34,692 [INFO] Theme changed to: default
+2025-05-13 01:44:38,228 [INFO] Attempting to switch to dashboard...
+2025-05-13 01:44:38,259 [INFO] Successfully switched to dashboard
+2025-05-13 01:45:40,024 [INFO] ==================================================
+2025-05-13 01:45:40,049 [INFO] ==================================================
+2025-05-13 01:52:27,239 [INFO] Theme changed to: default
+2025-05-13 01:52:29,153 [INFO] Attempting to switch to dashboard...
+2025-05-13 01:52:29,179 [INFO] Successfully switched to dashboard
+2025-05-13 01:53:26,223 [INFO] ==================================================
+2025-05-13 01:53:26,237 [INFO] ==================================================
+2025-05-13 01:57:56,609 [INFO] Theme changed to: default
+2025-05-13 01:58:05,678 [INFO] Attempting to switch to dashboard...
+2025-05-13 01:58:05,695 [INFO] Successfully switched to dashboard
+2025-05-13 02:05:21,912 [INFO] Theme changed to: default
+2025-05-13 02:05:23,812 [INFO] Attempting to switch to dashboard...
+2025-05-13 02:05:23,825 [INFO] Successfully switched to dashboard
+2025-05-13 02:08:19,548 [INFO] Theme changed to: default
+2025-05-13 02:08:21,559 [INFO] Attempting to switch to dashboard...
+2025-05-13 02:08:21,572 [INFO] Successfully switched to dashboard
+2025-05-13 02:08:46,616 [INFO] ==================================================
+2025-05-13 02:08:46,617 [INFO] 📊 Processing Summary:
+2025-05-13 02:08:46,617 [INFO] ⏱️ Total processing time: 15s
+2025-05-13 02:08:46,617 [INFO] 📁 Folder: Test Images 4
+2025-05-13 02:08:46,617 [INFO] 🖼️ Total images processed: 1
+2025-05-13 02:08:46,617 [INFO] ⚡ Average processing time per image: 15.91s
+2025-05-13 02:08:46,617 [INFO] ==================================================
+2025-05-13 02:08:46,632 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 02:08:46,635 [INFO] ✅ Added button for folder 'Test Images 4' at row 1, col 0
+2025-05-13 02:08:46,685 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4\500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 02:08:46,762 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4\500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 02:12:56,999 [INFO] Theme changed to: default
+2025-05-13 02:13:07,291 [INFO] Attempting to switch to dashboard...
+2025-05-13 02:13:07,304 [INFO] Successfully switched to dashboard
+2025-05-13 02:13:34,893 [INFO] ==================================================
+2025-05-13 02:13:34,893 [INFO] 📊 Processing Summary:
+2025-05-13 02:13:34,893 [INFO] ⏱️ Total processing time: 18s
+2025-05-13 02:13:34,894 [INFO] 📁 Folder: Test Images 4
+2025-05-13 02:13:34,894 [INFO] 🖼️ Total images processed: 1
+2025-05-13 02:13:34,894 [INFO] ⚡ Average processing time per image: 18.84s
+2025-05-13 02:13:34,894 [INFO] ==================================================
+2025-05-13 02:13:34,913 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 02:13:34,916 [INFO] ✅ Added button for folder 'Test Images 4' at row 1, col 0
+2025-05-13 02:13:34,967 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4\500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 02:13:35,039 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4\500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 02:15:09,564 [INFO] Theme changed to: default
+2025-05-13 02:15:20,855 [INFO] Attempting to switch to dashboard...
+2025-05-13 02:15:20,873 [INFO] Successfully switched to dashboard
+2025-05-13 02:15:53,363 [INFO] ==================================================
+2025-05-13 02:15:53,363 [INFO] 📊 Processing Summary:
+2025-05-13 02:15:53,364 [INFO] ⏱️ Total processing time: 16s
+2025-05-13 02:15:53,364 [INFO] 📁 Folder: Test Images 4
+2025-05-13 02:15:53,364 [INFO] 🖼️ Total images processed: 1
+2025-05-13 02:15:53,364 [INFO] ⚡ Average processing time per image: 16.31s
+2025-05-13 02:15:53,364 [INFO] ==================================================
+2025-05-13 02:15:53,381 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 02:15:53,383 [INFO] ✅ Added button for folder 'Test Images 4' at row 1, col 0
+2025-05-13 02:15:53,437 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4\500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 02:15:53,529 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4\500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 02:21:02,804 [INFO] Report generated successfully
+2025-05-13 02:22:19,213 [INFO] Report generated successfully
+2025-05-13 02:36:42,072 [INFO] Theme changed to: default
+2025-05-13 02:36:44,237 [INFO] Attempting to switch to dashboard...
+2025-05-13 02:36:44,252 [INFO] Successfully switched to dashboard
+2025-05-13 02:37:15,596 [INFO] Theme changed to: default
+2025-05-13 02:37:17,734 [INFO] Attempting to switch to dashboard...
+2025-05-13 02:37:17,747 [INFO] Successfully switched to dashboard
+2025-05-13 02:37:26,484 [ERROR] Error processing C:/Users/genes/Pictures/Safe Text, Hate Image\Parameters.png: I/O operation on closed file.
+2025-05-13 02:37:26,484 [INFO] ==================================================
+2025-05-13 02:37:26,484 [INFO] 📊 Processing Summary:
+2025-05-13 02:37:26,484 [INFO] ⏱️ Total processing time: 0s
+2025-05-13 02:37:26,485 [INFO] 📁 Folder: Safe Text, Hate Image
+2025-05-13 02:37:26,485 [INFO] 🖼️ Total images processed: 0
+2025-05-13 02:37:26,485 [INFO] ⚡ Average processing time per image: N/A
+2025-05-13 02:37:26,485 [INFO] ==================================================
+2025-05-13 02:37:26,490 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 02:37:26,491 [INFO] ✅ Added button for folder 'Safe Text, Hate Image' at row 1, col 0
+2025-05-13 02:37:28,191 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Text, Hate Image\Parameters.png
+2025-05-13 02:37:28,208 [INFO] ✅ 1 images shown in explorer view.
+2025-05-13 02:41:51,928 [INFO] Theme changed to: default
+2025-05-13 02:42:46,100 [INFO] Attempting to switch to dashboard...
+2025-05-13 02:42:46,113 [INFO] Successfully switched to dashboard
+2025-05-13 02:42:54,638 [ERROR] Error processing C:/Users/genes/Pictures/Safe Text, Hate Image\Parameters.png: I/O operation on closed file.
+2025-05-13 02:42:54,638 [INFO] ==================================================
+2025-05-13 02:42:54,639 [INFO] 📊 Processing Summary:
+2025-05-13 02:42:54,639 [INFO] ⏱️ Total processing time: 0s
+2025-05-13 02:42:54,639 [INFO] 📁 Folder: Safe Text, Hate Image
+2025-05-13 02:42:54,639 [INFO] 🖼️ Total images processed: 0
+2025-05-13 02:42:54,639 [INFO] ⚡ Average processing time per image: N/A
+2025-05-13 02:42:54,639 [INFO] ==================================================
+2025-05-13 02:42:54,645 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 02:42:54,645 [INFO] ✅ Added button for folder 'Safe Text, Hate Image' at row 1, col 0
+2025-05-13 02:43:31,985 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4/500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 02:53:11,500 [INFO] Theme changed to: default
+2025-05-13 02:54:56,663 [INFO] Attempting to switch to dashboard...
+2025-05-13 02:54:56,676 [INFO] Successfully switched to dashboard
+2025-05-13 02:55:05,900 [ERROR] Error adding IPO row: type object 'QTextEdit' has no attribute 'WidgetWidth'
+2025-05-13 02:55:05,904 [ERROR] Error adding IPO row: type object 'QTextEdit' has no attribute 'WidgetWidth'
+2025-05-13 02:55:07,591 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png: I/O operation on closed file.
+2025-05-13 02:55:07,767 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png: I/O operation on closed file.
+2025-05-13 02:55:07,768 [INFO] ==================================================
+2025-05-13 02:55:07,768 [INFO] 📊 Processing Summary:
+2025-05-13 02:55:07,768 [INFO] ⏱️ Total processing time: 1s
+2025-05-13 02:55:07,768 [INFO] 📁 Folder: Safe Image, Hate Text
+2025-05-13 02:55:07,769 [INFO] 🖼️ Total images processed: 0
+2025-05-13 02:55:07,769 [INFO] ⚡ Average processing time per image: N/A
+2025-05-13 02:55:07,769 [INFO] ==================================================
+2025-05-13 02:55:07,777 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 02:55:07,780 [INFO] ✅ Added button for folder 'Safe Image, Hate Text' at row 1, col 0
+2025-05-13 02:55:11,506 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png
+2025-05-13 02:55:11,548 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png
+2025-05-13 02:55:11,561 [INFO] ✅ 2 images shown in explorer view.
+2025-05-13 03:02:37,449 [INFO] Theme changed to: default
+2025-05-13 03:02:40,538 [INFO] Attempting to switch to dashboard...
+2025-05-13 03:02:40,550 [INFO] Successfully switched to dashboard
+2025-05-13 03:03:04,540 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4/500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 03:03:22,515 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png: I/O operation on closed file.
+2025-05-13 03:03:22,675 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png: I/O operation on closed file.
+2025-05-13 03:03:22,675 [INFO] ==================================================
+2025-05-13 03:03:22,675 [INFO] 📊 Processing Summary:
+2025-05-13 03:03:22,675 [INFO] ⏱️ Total processing time: 0s
+2025-05-13 03:03:22,675 [INFO] 📁 Folder: Safe Image, Hate Text
+2025-05-13 03:03:22,675 [INFO] 🖼️ Total images processed: 0
+2025-05-13 03:03:22,676 [INFO] ⚡ Average processing time per image: N/A
+2025-05-13 03:03:22,676 [INFO] ==================================================
+2025-05-13 03:03:22,677 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 03:03:22,679 [INFO] ✅ Added button for folder 'Safe Image, Hate Text' at row 1, col 0
+2025-05-13 03:03:22,680 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4/500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 03:03:22,702 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4/500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 03:03:25,341 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png
+2025-05-13 03:03:25,354 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png
+2025-05-13 03:03:25,366 [INFO] ✅ 2 images shown in explorer view.
+2025-05-13 03:10:51,022 [INFO] Theme changed to: default
+2025-05-13 03:10:54,711 [INFO] Attempting to switch to dashboard...
+2025-05-13 03:10:54,724 [INFO] Successfully switched to dashboard
+2025-05-13 03:12:29,005 [INFO] Theme changed to: default
+2025-05-13 03:12:48,073 [INFO] Attempting to switch to dashboard...
+2025-05-13 03:12:48,085 [INFO] Successfully switched to dashboard
+2025-05-13 03:13:12,037 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4/500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 03:13:24,113 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png: I/O operation on closed file.
+2025-05-13 03:13:24,274 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png: I/O operation on closed file.
+2025-05-13 03:13:24,274 [INFO] ==================================================
+2025-05-13 03:13:24,275 [INFO] 📊 Processing Summary:
+2025-05-13 03:13:24,275 [INFO] ⏱️ Total processing time: 0s
+2025-05-13 03:13:24,275 [INFO] 📁 Folder: Safe Image, Hate Text
+2025-05-13 03:13:24,275 [INFO] 🖼️ Total images processed: 0
+2025-05-13 03:13:24,276 [INFO] ⚡ Average processing time per image: N/A
+2025-05-13 03:13:24,276 [INFO] ==================================================
+2025-05-13 03:13:24,277 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 03:13:24,279 [INFO] ✅ Added button for folder 'Safe Image, Hate Text' at row 1, col 0
+2025-05-13 03:13:24,280 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4/500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 03:13:24,301 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4/500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 03:13:28,235 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png
+2025-05-13 03:13:28,248 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png
+2025-05-13 03:13:28,261 [INFO] ✅ 2 images shown in explorer view.
+2025-05-13 03:13:36,888 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png
+2025-05-13 03:13:36,901 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png
+2025-05-13 03:13:36,915 [INFO] ✅ 2 images shown in explorer view.
+2025-05-13 03:14:47,000 [ERROR] Error processing C:/Users/genes/Pictures/Test Images 3\memes_17.png: I/O operation on closed file.
+2025-05-13 03:14:47,183 [ERROR] Error processing C:/Users/genes/Pictures/Test Images 3\memes_18.png: I/O operation on closed file.
+2025-05-13 03:14:47,438 [ERROR] Error processing C:/Users/genes/Pictures/Test Images 3\memes_19.png: I/O operation on closed file.
+2025-05-13 03:14:47,605 [ERROR] Error processing C:/Users/genes/Pictures/Test Images 3\memes_21.png: I/O operation on closed file.
+2025-05-13 03:15:35,001 [ERROR] Error processing C:/Users/genes/Pictures/Images from the Internet\5b5c815ae7e03.jpeg: I/O operation on closed file.
+2025-05-13 03:15:35,155 [ERROR] Error processing C:/Users/genes/Pictures/Images from the Internet\a3cd998004de693c13879a9cded7e620.jpg: I/O operation on closed file.
+2025-05-13 03:15:35,284 [ERROR] Error processing C:/Users/genes/Pictures/Images from the Internet\b1efb0ca412e9eb3241c8a4b54d8ff32.jpg: I/O operation on closed file.
+2025-05-13 03:15:35,413 [ERROR] Error processing C:/Users/genes/Pictures/Images from the Internet\racism.png: I/O operation on closed file.
+2025-05-13 03:15:35,414 [INFO] ==================================================
+2025-05-13 03:15:35,414 [INFO] 📊 Processing Summary:
+2025-05-13 03:15:35,414 [INFO] ⏱️ Total processing time: 0s
+2025-05-13 03:15:35,414 [INFO] 📁 Folder: Images from the Internet
+2025-05-13 03:15:35,414 [INFO] 🖼️ Total images processed: 0
+2025-05-13 03:15:35,415 [INFO] ⚡ Average processing time per image: N/A
+2025-05-13 03:15:35,415 [INFO] ==================================================
+2025-05-13 03:15:35,415 [INFO] ✅ Added button for folder 'Images from the Internet' at row 1, col 1
+2025-05-13 03:15:35,416 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4/500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 03:15:35,444 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Test Images 4/500112a200c2354bc36c42358b68bd20.jpg
+2025-05-13 03:15:50,094 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png
+2025-05-13 03:15:50,108 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png
+2025-05-13 03:15:50,125 [INFO] ✅ 2 images shown in explorer view.
+2025-05-13 03:37:11,388 [INFO] Theme changed to: default
+2025-05-13 03:37:13,405 [INFO] Attempting to switch to dashboard...
+2025-05-13 03:37:13,418 [INFO] Successfully switched to dashboard
+2025-05-13 03:45:23,499 [INFO] Application starting
+2025-05-13 03:45:34,916 [INFO] Theme changed to: default
+2025-05-13 03:45:36,691 [INFO] Attempting to switch to dashboard...
+2025-05-13 03:45:36,703 [INFO] Successfully switched to dashboard
+2025-05-13 03:45:41,710 [INFO] Starting folder processing: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:45:43,515 [INFO] Worker thread started: True
+2025-05-13 03:45:43,517 [INFO] Worker thread started running
+2025-05-13 03:45:43,517 [INFO] Processing file: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png
+2025-05-13 03:45:44,383 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png: I/O operation on closed file.
+2025-05-13 03:45:44,384 [INFO] Processing file: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png
+2025-05-13 03:45:44,531 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png: I/O operation on closed file.
+2025-05-13 03:45:44,532 [INFO] ==================================================
+2025-05-13 03:45:44,532 [INFO] 📊 Processing Summary:
+2025-05-13 03:45:44,532 [INFO] ⏱️ Total processing time: 1s
+2025-05-13 03:45:44,533 [INFO] 📁 Folder: Safe Image, Hate Text
+2025-05-13 03:45:44,533 [INFO] 🖼️ Total images processed: 0
+2025-05-13 03:45:44,533 [INFO] ⚡ Average processing time per image: N/A
+2025-05-13 03:45:44,533 [INFO] ==================================================
+2025-05-13 03:45:44,533 [INFO] Worker thread finished
+2025-05-13 03:45:44,533 [INFO] Processing finished for folder: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:45:44,534 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 03:45:44,534 [INFO] ✅ Added button for folder 'Safe Image, Hate Text' at row 1, col 0
+2025-05-13 03:45:44,535 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:45:44,536 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:45:44,558 [INFO] Folder processed successfully: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:46:03,981 [INFO] Attempting to cancel processing...
+2025-05-13 03:46:05,486 [INFO] Attempting to cancel processing...
+2025-05-13 03:46:06,415 [INFO] Attempting to cancel processing...
+2025-05-13 03:46:07,264 [INFO] Attempting to cancel processing...
+2025-05-13 03:46:07,908 [INFO] Attempting to cancel processing...
+2025-05-13 03:46:08,618 [INFO] Attempting to cancel processing...
+2025-05-13 03:46:38,525 [INFO] Application starting
+2025-05-13 03:46:49,358 [INFO] Theme changed to: default
+2025-05-13 03:46:51,321 [INFO] Attempting to switch to dashboard...
+2025-05-13 03:46:51,333 [INFO] Successfully switched to dashboard
+2025-05-13 03:46:57,541 [INFO] Starting folder processing: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:46:59,562 [INFO] Worker thread started: True
+2025-05-13 03:46:59,563 [INFO] Worker thread started running
+2025-05-13 03:46:59,563 [INFO] Processing file: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png
+2025-05-13 03:47:00,193 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png: I/O operation on closed file.
+2025-05-13 03:47:00,193 [INFO] Processing file: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png
+2025-05-13 03:47:00,317 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png: I/O operation on closed file.
+2025-05-13 03:47:00,318 [INFO] ==================================================
+2025-05-13 03:47:00,318 [INFO] 📊 Processing Summary:
+2025-05-13 03:47:00,318 [INFO] ⏱️ Total processing time: 0s
+2025-05-13 03:47:00,318 [INFO] 📁 Folder: Safe Image, Hate Text
+2025-05-13 03:47:00,318 [INFO] 🖼️ Total images processed: 0
+2025-05-13 03:47:00,318 [INFO] ⚡ Average processing time per image: N/A
+2025-05-13 03:47:00,318 [INFO] ==================================================
+2025-05-13 03:47:00,319 [INFO] Worker thread finished
+2025-05-13 03:47:00,319 [INFO] Processing finished for folder: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:47:00,319 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 03:47:00,320 [INFO] ✅ Added button for folder 'Safe Image, Hate Text' at row 1, col 0
+2025-05-13 03:47:00,320 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:47:00,321 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:47:00,339 [INFO] Folder processed successfully: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:51:01,704 [INFO] Application starting
+2025-05-13 03:51:13,437 [INFO] Theme changed to: default
+2025-05-13 03:51:18,483 [INFO] Attempting to switch to dashboard...
+2025-05-13 03:51:18,495 [INFO] Successfully switched to dashboard
+2025-05-13 03:51:24,069 [INFO] Starting folder processing: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:51:25,906 [INFO] Worker thread started: True
+2025-05-13 03:51:25,907 [INFO] Worker thread started running
+2025-05-13 03:51:25,908 [INFO] Processing file: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png
+2025-05-13 03:51:26,263 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png: I/O operation on closed file.
+2025-05-13 03:51:26,263 [INFO] Processing file: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png
+2025-05-13 03:51:26,398 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png: I/O operation on closed file.
+2025-05-13 03:51:26,398 [INFO] ==================================================
+2025-05-13 03:51:26,398 [INFO] 📊 Processing Summary:
+2025-05-13 03:51:26,398 [INFO] ⏱️ Total processing time: 0s
+2025-05-13 03:51:26,398 [INFO] 📁 Folder: Safe Image, Hate Text
+2025-05-13 03:51:26,398 [INFO] 🖼️ Total images processed: 0
+2025-05-13 03:51:26,399 [INFO] ⚡ Average processing time per image: N/A
+2025-05-13 03:51:26,399 [INFO] ==================================================
+2025-05-13 03:51:26,399 [INFO] Worker thread finished
+2025-05-13 03:51:26,399 [INFO] Processing finished for folder: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:51:26,399 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 03:51:26,400 [INFO] ✅ Added button for folder 'Safe Image, Hate Text' at row 1, col 0
+2025-05-13 03:51:26,401 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:51:26,401 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:51:26,415 [INFO] Folder processed successfully: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:51:34,375 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png
+2025-05-13 03:51:34,394 [INFO] 🖼️ Exploring: C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png
+2025-05-13 03:51:34,408 [INFO] ✅ 2 images shown in explorer view.
+2025-05-13 03:53:32,469 [INFO] Application starting
+2025-05-13 03:53:43,933 [INFO] Theme changed to: default
+2025-05-13 03:53:46,227 [INFO] Attempting to switch to dashboard...
+2025-05-13 03:53:46,240 [INFO] Successfully switched to dashboard
+2025-05-13 03:53:51,949 [INFO] Starting folder processing: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:53:53,829 [INFO] Worker thread started: True
+2025-05-13 03:53:54,154 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png: I/O operation on closed file.
+2025-05-13 03:53:54,271 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png: I/O operation on closed file.
+2025-05-13 03:53:54,271 [INFO] ==================================================
+2025-05-13 03:53:54,271 [INFO] 📊 Processing Summary:
+2025-05-13 03:53:54,272 [INFO] ⏱️ Total processing time: 0.44s
+2025-05-13 03:53:54,272 [INFO] 📁 Folder: Safe Image, Hate Text
+2025-05-13 03:53:54,272 [INFO] 🖼️ Total images processed: 0
+2025-05-13 03:53:54,272 [INFO] ==================================================
+2025-05-13 03:53:54,272 [INFO] Processing finished for folder: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:53:54,273 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 03:53:54,273 [INFO] ✅ Added button for folder 'Safe Image, Hate Text' at row 1, col 0
+2025-05-13 03:53:54,274 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:53:54,274 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:53:54,293 [INFO] Folder processed successfully: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:56:11,564 [INFO] Application starting
+2025-05-13 03:56:24,550 [INFO] Theme changed to: default
+2025-05-13 03:56:26,539 [INFO] Attempting to switch to dashboard...
+2025-05-13 03:56:26,553 [INFO] Successfully switched to dashboard
+2025-05-13 03:56:34,608 [INFO] Starting folder processing: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:56:36,451 [INFO] Worker thread started: True
+2025-05-13 03:56:37,410 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters (1).png: I/O operation on closed file.
+2025-05-13 03:56:37,568 [ERROR] Error processing C:/Users/genes/Pictures/Safe Image, Hate Text\Parameters.png: I/O operation on closed file.
+2025-05-13 03:56:37,569 [INFO] ==================================================
+2025-05-13 03:56:37,569 [INFO] 📊 Processing Summary:
+2025-05-13 03:56:37,569 [INFO] ⏱️ Total processing time: 1.12s
+2025-05-13 03:56:37,569 [INFO] 📁 Folder: Safe Image, Hate Text
+2025-05-13 03:56:37,569 [INFO] 🖼️ Total images processed: 0
+2025-05-13 03:56:37,570 [INFO] ==================================================
+2025-05-13 03:56:37,570 [INFO] Processing finished for folder: C:/Users/genes/Pictures/Safe Image, Hate Text
+2025-05-13 03:56:37,572 [INFO] 🗑️ Removing the initial 'No folders' label.
+2025-05-13 03:56:37,574 [INFO] ✅ Added button for folder 'Safe Image, Hate Text' at row 1, col 0
+2025-05-13 03:56:37,575 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:56:37,576 [INFO] Dashboard metrics updated successfully
+2025-05-13 03:56:37,599 [INFO] Folder processed successfully: C:/Users/genes/Pictures/Safe Image, Hate Text

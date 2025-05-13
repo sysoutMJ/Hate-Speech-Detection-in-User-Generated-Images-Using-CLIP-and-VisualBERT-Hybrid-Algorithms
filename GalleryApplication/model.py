@@ -5,6 +5,8 @@ from PIL import Image
 
 
 """
+    ℹ️ [MAIN FILE]
+    
     This is model.py
     
     This contains the main architecture of the hybrid model.

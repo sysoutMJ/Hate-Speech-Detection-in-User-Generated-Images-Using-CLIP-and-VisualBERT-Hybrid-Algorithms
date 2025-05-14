@@ -387,7 +387,9 @@ def print_metrics(metrics):
 def evaluate_saved_model(model_path, model, val_loader=None, test_loader=None):
     """Evaluate a saved model on validation and test sets."""
     # Load the best model
-    model.load_state_dict(torch.load(model_path))
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.load_state_dict(torch.load(model_path, map_location=device))
 
     if val_loader:
         # Evaluate on validation set

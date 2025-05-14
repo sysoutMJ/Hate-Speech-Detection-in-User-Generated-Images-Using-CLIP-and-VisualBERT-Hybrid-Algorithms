@@ -29,7 +29,6 @@ from PyQt6.uic import loadUi
 from PyQt6.QtCore import QThread, pyqtSignal
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from classify import HateSpeechDetector
 from fpdf import FPDF
 from PIL import Image, ImageFilter
 import torch
@@ -44,55 +43,55 @@ sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding="utf-8")
 
 
 # region PATHS
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-GALLERY_UI_PATH = r"K:\Official_Thesis\GalleryApplication\gallery_application.ui"
-STYLESHEET_PATH = r"K:\Official_Thesis\GalleryApplication\stylesheet.qss"
-LIGHT_BLUE_THEME_PATH = r"K:\Official_Thesis\GalleryApplication\light_blue_theme.qss"
-DARK_THEME_PATH = r"K:\Official_Thesis\GalleryApplication\dark_theme.qss"
+DEVICE = torch.device("cpu")
+GALLERY_UI_PATH = r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\gallery_application.ui"
+STYLESHEET_PATH = r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\stylesheet.qss"
+LIGHT_BLUE_THEME_PATH = r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\light_blue_theme.qss"
+DARK_THEME_PATH = r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\dark_theme.qss"
 
 # Logo and Icons
 NEURALJAM_LOGO = (
-    r"K:\Official_Thesis\GalleryApplication\assets\NeuralJAM_Logo_60x60.png"
+    r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\NeuralJAM_Logo_60x60.png"
 )
-LOADING_GIF = r"K:\Official_Thesis\GalleryApplication\assets\loading.gif"
+LOADING_GIF = r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\loading.gif"
 
 # Model Path
-MODEL_PATH = r"K:\Official_Thesis\best_model.pth"
+MODEL_PATH = r"C:\Users\ACER\Desktop\Thesis\best_model.pth"
 
 # Hamburger
 HAMBURGER_ICON = {
-    "black": r"K:\Official_Thesis\GalleryApplication\assets\hamburgerIcon_black.png",
-    "white": r"K:\Official_Thesis\GalleryApplication\assets\hamburgerIcon_white.png",
+    "black": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\hamburgerIcon_black.png",
+    "white": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\hamburgerIcon_white.png",
 }
 
 # Sidebar Icons
 SIDEBAR_ICONS = {
     "dashboard": {
-        "black": r"K:\Official_Thesis\GalleryApplication\assets\dashboard_black.png",
-        "white": r"K:\Official_Thesis\GalleryApplication\assets\dashboard_white.png",
+        "black": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\dashboard_black.png",
+        "white": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\dashboard_white.png",
     },
     "explore": {
-        "black": r"K:\Official_Thesis\GalleryApplication\assets\explore_black.png",
-        "white": r"K:\Official_Thesis\GalleryApplication\assets\explore_white.png",
+        "black": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\explore_black.png",
+        "white": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\explore_white.png",
     },
     "hate_speech": {
-        "black": r"K:\Official_Thesis\GalleryApplication\assets\hatespeechImage_black.png",
-        "white": r"K:\Official_Thesis\GalleryApplication\assets\hatespeechImage_white.png",
+        "black": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\hatespeechImage_black.png",
+        "white": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\hatespeechImage_white.png",
     },
     "inference": {
-        "black": r"K:\Official_Thesis\GalleryApplication\assets\IPO_black.png",
-        "white": r"K:\Official_Thesis\GalleryApplication\assets\IPO_white.png",
+        "black": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\IPO_black.png",
+        "white": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\IPO_white.png",
     },
     "info": {
-        "black": r"K:\Official_Thesis\GalleryApplication\assets\information_blue.png",
-        "white": r"K:\Official_Thesis\GalleryApplication\assets\information_blue.png",
+        "black": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\information_blue.png",
+        "white": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\information_blue.png",
     },
     "settings": {
-        "black": r"K:\Official_Thesis\GalleryApplication\assets\settings_black.png",
-        "white": r"K:\Official_Thesis\GalleryApplication\assets\settings_white.png",
+        "black": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\settings_black.png",
+        "white": r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\settings_white.png",
     },
 }
-BACK_ICON = r"K:\Official_Thesis\GalleryApplication\assets\back_black.png"
+BACK_ICON = r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\back_black.png"
 
 # Data Files
 SCANNED_FOLDERS_FILE = "scanned_folders.json"
@@ -101,7 +100,7 @@ SCANNED_FOLDERS_FILE = "scanned_folders.json"
 SORT_MENU_QSS = "color: #000000"
 USER_GUIDE_QSS = "font-size: 16px"  # Set text color to black
 USER_GUIDE_ICON_PATH = (
-    r"K:\Official_Thesis\GalleryApplication\assets\information_blue.png"
+    r"C:\Users\ACER\Desktop\Thesis\git_Thesis\GalleryApplication\assets\information_blue.png"
 )
 # endregion
 
@@ -111,9 +110,9 @@ class ProcessingWorker(QThread):
     finished = pyqtSignal(dict)
     error = pyqtSignal(str)
 
-    def __init__(self, detector, folder_path=None, image_path=None):
+    def __init__(self, folder_path=None, image_path=None):
         super().__init__()
-        self.detector = detector
+        # self.detector = detector
         self.folder_path = folder_path
         self.image_path = image_path
         self._is_running = True
@@ -143,9 +142,9 @@ class ProcessingWorker(QThread):
         time_start = time.time()
 
         try:
-            detector = (
-                self.hate_speech_detector
-            )  # Avoid recreating the detector every time
+            # detector = (
+            #     self.hate_speech_detector
+            # )  # Avoid recreating the detector every time
 
             for root, _, files in os.walk(self.folder_path):
                 for file in files:
@@ -164,7 +163,7 @@ class ProcessingWorker(QThread):
                         text = self.easy_ocr.extract_text(file_path)
 
                         # Predict with image + text using adaptive fusion
-                        score = detector.predict_with_adaptive_fusion(
+                        score = self.hate_speech_detector.predict_with_adaptive_fusion(
                             image_path=file_path, text=text
                         )
 
@@ -350,11 +349,11 @@ class GalleryApplication(QMainWindow):
         """
             For hybrid model initialization and other instantiation
         """
-        try:
-            self.detector = HateSpeechDetector(model_path=MODEL_PATH, device=DEVICE)
-        except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to load model: {str(e)}")
-            sys.exit(1)
+        # try:
+        #     self.detector = HateSpeechDetector(model_path=MODEL_PATH, device=DEVICE)
+        # except Exception as e:
+        #     QMessageBox.critical(self, "Error", f"Failed to load model: {str(e)}")
+        #     sys.exit(1)
 
         self.easy_ocr = OCRExtractor()
 
@@ -1655,7 +1654,7 @@ class GalleryApplication(QMainWindow):
                 # Process without blur
                 pixmap = self.process_image_for_display(image_path, blur=False)
 
-            # pixmap = self.crop_and_scale_pixmap(pixmap, label_width, label_height)
+            pixmap = self.crop_and_scale_pixmap(pixmap, label_width, label_height)
 
             label = QLabel()
             label.setPixmap(pixmap)
@@ -1930,7 +1929,7 @@ class GalleryApplication(QMainWindow):
                 self.worker = None  # Clear the reference
 
             # Create new worker
-            self.worker = ProcessingWorker(self.detector, folder_path=folder_path)
+            self.worker = ProcessingWorker(folder_path=folder_path)
 
             # Connect signals
             self.worker.progress.connect(self.on_processing_progress)
@@ -1970,7 +1969,7 @@ class GalleryApplication(QMainWindow):
                 self.worker = None  # Clear the reference
 
             # Create and start worker for single image
-            self.worker = ProcessingWorker(self.detector, image_path=image_path)
+            self.worker = ProcessingWorker(image_path=image_path)
             self.worker.finished.connect(self.on_single_image_finished)
             self.worker.error.connect(self.on_processing_error)
             self.processing_timer.start(5000)
@@ -2317,7 +2316,7 @@ class GalleryApplication(QMainWindow):
 
         # Add images to layout
         label_width = 300
-        label_height = 150
+        label_height = 200
 
         # region BLUR THRESHOLD
         for i, image_data in enumerate(all_images):
@@ -2330,7 +2329,7 @@ class GalleryApplication(QMainWindow):
                     blur=image_data["score"]
                     > 0.5,  # Only blur if score > 0.5 ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
                 )
-                # pixmap = self.crop_and_scale_pixmap(pixmap, label_width, label_height)
+                pixmap = self.crop_and_scale_pixmap(pixmap, label_width, label_height)
 
                 label = QLabel()
                 label.setPixmap(pixmap)
@@ -2575,7 +2574,7 @@ class GalleryApplication(QMainWindow):
                     pdf.ln(10)
 
             # Save PDF
-            report_path = "hate_speech_report.pdf"
+            report_path = os.path.join(os.getcwd(), "hate_speech_report.pdf")
             pdf.output(report_path)
             self.show_custom_popup(
                 "Success", f"Report generated successfully at:\n{report_path}"
@@ -2683,27 +2682,30 @@ class GalleryApplication(QMainWindow):
             """)
 
             # Add the formatted text
-            process_text = "<pre style='font-size: 14pt;'>"
-            process_text += "PROCESSING INFORMATION:\n"
-            process_text += f"📄 File: {os.path.basename(img_data['path'])}\n"
+            process_text = (
+                "PROCESSING INFORMATION:\n"
+                f"📄 File: {os.path.basename(img_data['path'])}\n"
+            )
 
             if img_data["type"] == "folder":
                 process_text += f"📁 Folder: {os.path.basename(os.path.dirname(img_data['path']))}\n\n"
 
-            process_text += "TEXT EXTRACTION:\n"
-            process_text += "🔍 Performing OCR text extraction...\n"
-
             # text = self.detector.extract_text(img_data["path"])
             text = self.easy_ocr.extract_text(img_data["path"])
 
-            process_text += f"📝 Extracted Text:\n{text}\n\n"
+            # process_text += f"📝 Extracted Text:\n{text}\n\n"
 
-            process_text += "HATE SPEECH ANALYSIS:\n"
-            process_text += f"📊 Prediction Score: {img_data['score']:.4f}\n"
-            process_text += f"🚨 Conclusion: {'HATE SPEECH DETECTED' if img_data['score'] > 0.5 else 'No hate speech detected'}\n"
-            process_text += f"\n📍 Path: {img_data['path']}"
-
+            process_text += (
+                "TEXT EXTRACTION:\n"
+                "🔍 Performing OCR text extraction...\n"
+                f"📝 Extracted Text:\n{text}\n\n"
+                "HATE SPEECH ANALYSIS:\n"
+                f"📊 Prediction Score: {img_data['score']:.4f}\n"
+                f"🚨 Conclusion: {'HATE SPEECH DETECTED' if img_data['score'] > 0.5 else 'No hate speech detected'}\n"
+                f"\n📍 Path: {img_data['path']}"
+            )
             process_text_edit.setText(process_text)
+
             process_layout.addWidget(process_text_edit)
             process_layout.setContentsMargins(0, 0, 0, 0)
             self.ipo_table.setCellWidget(row, 1, process_widget)
@@ -2820,7 +2822,11 @@ class GalleryApplication(QMainWindow):
                 process_log.append("│        HATE SPEECH ANALYSIS      │")
                 process_log.append("└──────────────────────────────────┘")
                 process_log.append("\n🧠 Running hate speech prediction...")
-                prediction = self.detector.predict(image_path, text)
+                # prediction = self.detector.predict(image_path, text)
+                prediction = self.hate_speech_detector.predict_with_adaptive_fusion(
+                            image_path=image_path, text=text
+                        )
+                
                 process_log.append(f"\n📊 Prediction Score: {prediction:.4f}")
                 process_log.append(
                     f"🚨 Conclusion: {'HATE SPEECH DETECTED' if prediction > 0.5 else 'No hate speech detected'}"
@@ -2978,8 +2984,8 @@ class GalleryApplication(QMainWindow):
         """)
 
         # Scale the pixmap to fit while maintaining aspect ratio
-        # scaled_pixmap = self.crop_and_scale_pixmap(pixmap, size[0] - 10, size[1] - 10)
-        label.setPixmap(pixmap)
+        scaled_pixmap = self.crop_and_scale_pixmap(pixmap, size[0] - 10, size[1] - 10)
+        label.setPixmap(scaled_pixmap)
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         return label

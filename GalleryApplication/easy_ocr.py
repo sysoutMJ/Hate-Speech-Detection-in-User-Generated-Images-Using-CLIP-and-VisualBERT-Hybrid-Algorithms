@@ -11,8 +11,8 @@ class OCRExtractor:
             gpu=True,
             detector=True,
             recognizer=True,
-            model_storage_directory=r"K:\Official_Thesis\EASY_OCR\my_model\lang_char",
-            user_network_directory=r"K:\Official_Thesis\EASY_OCR\my_model\lang_char",
+            model_storage_directory=r"C:\Users\ACER\Desktop\Thesis\git_Thesis\EASY_OCR\my_model\lang_char",
+            user_network_directory=r"C:\Users\ACER\Desktop\Thesis\git_Thesis\EASY_OCR\my_model\lang_char",
             detect_network="craft",  # <- pass network name, not .pth path
             recog_network="english_g2",  # <- same: pass the model name, not the .pth path
             download_enabled=False,

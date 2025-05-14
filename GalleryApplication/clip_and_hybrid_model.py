@@ -16,7 +16,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="transformers")
 warnings.filterwarnings("ignore", category=FutureWarning)
 warnings.filterwarnings("ignore", message="Using a slow image processor.*")
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cpu")
 
 
 class TextProcessor:
@@ -184,7 +184,7 @@ def predict_single_input(model_path, config, image_path, text):
     model = TrueHybridHateDetector(config).to(config.device)
 
     # Load saved weights
-    model.load_state_dict(torch.load(model_path, weights_only=True))
+    model.load_state_dict(torch.load(model_path, weights_only=True, map_location=config.device))
     model.eval()
 
     # Process and predict
@@ -205,10 +205,10 @@ def predict_single_input(model_path, config, image_path, text):
 class clip_and_hybrid_model:
     def predict_with_adaptive_fusion(self, image_path, text):
         config = Config()
-        config.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        config.device = torch.device("cpu")
         config.desired_threshold = 0.5
 
-        model_path = r"K:\0505\lr_2e-5_1.1_0506_best_model.pth"
+        model_path = r"C:\Users\ACER\Desktop\Thesis\lr_2e-5_1.1_0506_best_model.pth"
 
         # Load CLIP model results
         result = use_CLIP_only(image_path)

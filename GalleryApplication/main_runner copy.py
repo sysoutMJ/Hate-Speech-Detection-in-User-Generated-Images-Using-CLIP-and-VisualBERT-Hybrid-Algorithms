@@ -2489,6 +2489,7 @@ class GalleryApplication(QMainWindow):
                 layout.addWidget(error_label, row, col)
 
     # region GENERATE REPORT
+
     def generate_report(self):
         try:
             # First show confirmation dialog
@@ -2497,15 +2498,17 @@ class GalleryApplication(QMainWindow):
             sort_text = self.sortByComboBox.currentText()
 
             confirm_msg = f"""
-            <b>Report Generation Confirmation</b><br><br>
-            This report will be generated based on:<br>
-            - <b>Filter By:</b> {filter_text if filter_text != "--Select--" else "All"}<br>
-            - <b>Group By:</b> {group_text if group_text != "--Select--" else "All Content"}<br>
-            - <b>Sort By:</b> {sort_text if sort_text != "--Select--" else "Default"}<br><br>
-            The report will include:<br>
-            1. Dashboard overview statistics<br>
-            2. Detailed IPO table content as shown in the application<br><br>
-            <i>Would you like to proceed?</i>
+            <div style="font-size:19px;">
+                <b>Report Generation Confirmation</b><br><br>
+                This report will be generated based on:<br>
+                - <b>Filter By:</b> {filter_text if filter_text != "--Select--" else "All"}<br>
+                - <b>Group By:</b> {group_text if group_text != "--Select--" else "All Content"}<br>
+                - <b>Sort By:</b> {sort_text if sort_text != "--Select--" else "Default"}<br><br>
+                The report will include:<br>
+                1. Dashboard overview statistics<br>
+                2. Detailed analysis of processed images<br><br>
+                <i>Would you like to proceed?</i>
+            </div>
             """
 
             reply = QMessageBox.question(
@@ -2519,22 +2522,33 @@ class GalleryApplication(QMainWindow):
             if reply != QMessageBox.StandardButton.Yes:
                 return
 
-            # Create PDF with Unicode support
-            pdf = FPDF()
+            # Create PDF with Unicode support in LANDSCAPE orientation
+            pdf = FPDF(orientation="L")
             pdf.add_page()
-            pdf.add_font("DejaVu", "", "DejaVuSansCondensed.ttf", uni=True)
-            pdf.add_font("DejaVu", "B", "DejaVuSansCondensed-Bold.ttf", uni=True)
-            pdf.set_font("DejaVu", "", 12)
+            pdf.set_font("Arial", "", 12)
+
+            # Add page number function
+            pdf.alias_nb_pages()  # Will replace {nb} with total page count
+
+            # Create a footer with page numbers
+            def add_page_number(pdf):
+                pdf.set_y(-15)  # Position at 15 mm from bottom
+                pdf.set_font("Arial", "I", 8)
+                pdf.cell(0, 10, f"Page {pdf.page_no()}/{{nb}}", 0, 0, "R")
+
+            # Set footer function
+            pdf.set_auto_page_break(True, 15)
+            pdf._footer = add_page_number
 
             # Header with logo and title
-            pdf.image(NEURALJAM_LOGO, x=10, y=8, w=30, type="PNG")
-            pdf.set_font("DejaVu", "B", 16)
+            pdf.image(NEURALJAM_LOGO, x=10, y=8, w=30)
+            pdf.set_font("Arial", "B", 16)
             pdf.cell(
                 0, 10, "NeuralJAM Hate Speech Detection Report", ln=True, align="C"
             )
 
             # Report metadata
-            pdf.set_font("DejaVu", "", 12)
+            pdf.set_font("Arial", "", 12)
             pdf.cell(
                 0,
                 10,
@@ -2542,21 +2556,21 @@ class GalleryApplication(QMainWindow):
                 ln=True,
                 align="C",
             )
-
-            # Filter information
             pdf.cell(
                 0,
                 10,
-                f"Filters: {filter_text} | {group_text} | {sort_text}",
+                f"Filters: {filter_text if filter_text != '--Select--' else 'All'} | "
+                f"{group_text if group_text != '--Select--' else 'All Content'} | "
+                f"{sort_text if sort_text != '--Select--' else 'Default'}",
                 ln=True,
                 align="C",
             )
             pdf.ln(15)
 
-            # Dashboard Overview Section - in table format
-            pdf.set_font("DejaVu", "B", 14)
-            pdf.cell(0, 10, "Dashboard Overview", ln=True)
-            pdf.set_font("DejaVu", "", 12)
+            # Dashboard Overview Section - First Page Only
+            pdf.set_font("Arial", "B", 14)
+            pdf.cell(0, 10, "1. Summary Statistics", ln=True)
+            pdf.set_font("Arial", "", 12)
 
             # Calculate statistics
             total_images = len(self.total_scanned_image_files)
@@ -2566,117 +2580,392 @@ class GalleryApplication(QMainWindow):
                 (hate_speech_count / total_images * 100) if total_images > 0 else 0
             )
 
-            # Create dashboard table (2x2 grid)
+            # Create summary table
             col_width = pdf.w / 2 - 15
-            row_height = 15
+            row_height = 10
 
-            # Row 1
+            # Table header
+            pdf.set_fill_color(200, 200, 200)
+            pdf.cell(col_width, row_height, "Metric", 1, 0, "C", 1)
+            pdf.cell(col_width, row_height, "Value", 1, 1, "C", 1)
+
+            # Table rows
             pdf.set_fill_color(240, 240, 240)
-            pdf.cell(col_width, row_height, "Total Images Analyzed", 1, 0, "C", 1)
+            pdf.cell(col_width, row_height, "Total Images Processed", 1, 0, "L", 1)
             pdf.cell(col_width, row_height, str(total_images), 1, 1, "C")
 
-            # Row 2
-            pdf.cell(col_width, row_height, "Hate Speech Images", 1, 0, "C", 1)
+            pdf.cell(col_width, row_height, "Hate Speech Detections", 1, 0, "L", 1)
             pdf.cell(col_width, row_height, str(hate_speech_count), 1, 1, "C")
 
-            # Row 3
-            pdf.cell(col_width, row_height, "Non-Hate Speech Images", 1, 0, "C", 1)
+            pdf.cell(col_width, row_height, "Clean Images", 1, 0, "L", 1)
             pdf.cell(col_width, row_height, str(non_hate_speech_count), 1, 1, "C")
 
-            # Row 4
-            pdf.cell(col_width, row_height, "Hate Speech Percentage", 1, 0, "C", 1)
+            pdf.cell(col_width, row_height, "Hate Speech Percentage", 1, 0, "L", 1)
             pdf.cell(col_width, row_height, f"{hate_speech_percentage:.1f}%", 1, 1, "C")
 
-            pdf.ln(15)
+            # Add some space before the detailed analysis section starts on next page
+            pdf.ln(20)
+            pdf.set_font("Arial", "I", 10)
+            pdf.cell(
+                0,
+                10,
+                "Detailed analysis begins on the next page...",
+                ln=True,
+                align="C",
+            )
 
-            # IPO Table Section
-            pdf.set_font("DejaVu", "B", 14)
-            pdf.cell(0, 10, "Input-Process-Output Details", ln=True)
-            pdf.set_font("DejaVu", "", 10)
-
-            # Get the current IPO table data
+            # Image Analysis Section - Starts on new page
             rows = self.ipo_table.rowCount()
-            if rows == 0:
-                pdf.cell(0, 10, "No data available in the IPO table", ln=True)
-            else:
-                # Create IPO table in PDF
-                col_widths = [60, 80, 60]  # Input, Process, Output columns
+            if rows > 0:
+                # Get the current IPO table data
+                entries_per_page = 2  # Show 2 entries per page
+                current_entry = 0
 
-                # Header row
-                pdf.set_fill_color(200, 200, 200)
-                pdf.cell(col_widths[0], 10, "Input", 1, 0, "C", 1)
-                pdf.cell(col_widths[1], 10, "Process", 1, 0, "C", 1)
-                pdf.cell(col_widths[2], 10, "Output", 1, 1, "C", 1)
+                while current_entry < rows:
+                    pdf.add_page()
 
-                # Data rows
-                for row in range(rows):
-                    # Get data from each column
-                    input_widget = self.ipo_table.cellWidget(row, 0)
-                    process_widget = self.ipo_table.cellWidget(row, 1)
-                    output_widget = self.ipo_table.cellWidget(row, 2)
-
-                    # Input column - get filename from the first label found
-                    input_text = "Image"
-                    if input_widget:
-                        for child in input_widget.findChildren(QLabel):
-                            if child.pixmap():
-                                # Remove any emoji or special characters from filename
-                                filename = (
-                                    os.path.basename(child.toolTip())
-                                    if child.toolTip()
-                                    else "Image"
-                                )
-                                input_text = "".join(
-                                    c for c in filename if ord(c) < 128
-                                )
-                                break
-
-                    # Process column - get summary text
-                    process_text = "Processing info"
-                    if process_widget:
-                        process_label = process_widget.findChild(QLabel)
-                        if process_label:
-                            full_text = process_label.text()
-                            # Remove any problematic Unicode characters
-                            clean_text = "".join(c for c in full_text if ord(c) < 128)
-                            lines = clean_text.split("\n")[:4]  # Get first 4 lines
-                            process_text = "\n".join(lines)
-
-                    # Output column - get status
-                    output_text = "Result"
-                    if output_widget:
-                        status_label = output_widget.findChild(QLabel)
-                        if status_label:
-                            output_text = "".join(
-                                c for c in status_label.text() if ord(c) < 128
-                            )
-
-                    # Add row to PDF with alternating background
-                    fill = row % 2 == 0  # Alternate row colors
-                    pdf.set_fill_color(240, 240, 240) if fill else pdf.set_fill_color(
-                        255, 255, 255
+                    # Section header for each page
+                    pdf.set_font("Arial", "B", 14)
+                    pdf.cell(
+                        0,
+                        10,
+                        f"2. Detailed Image Analysis (Entries {current_entry + 1}-{min(current_entry + entries_per_page, rows)})",
+                        ln=True,
                     )
+                    pdf.set_font("Arial", "", 10)
 
-                    pdf.multi_cell(col_widths[0], 10, input_text, 1, "L", fill)
-                    x_pos = pdf.get_x()
-                    y_pos = pdf.get_y()
+                    # Create table header row
+                    col_widths = [
+                        60,
+                        150,
+                        60,
+                    ]  # Wider columns for landscape orientation
+                    pdf.set_fill_color(200, 200, 200)
+                    pdf.cell(col_widths[0], 10, "Original Image", 1, 0, "C", 1)
+                    pdf.cell(col_widths[1], 10, "Analysis Details", 1, 0, "C", 1)
+                    pdf.cell(col_widths[2], 10, "Result", 1, 1, "C", 1)
 
-                    pdf.set_xy(
-                        x_pos + col_widths[0], y_pos - 10
-                    )  # Reset position for next cell
-                    pdf.multi_cell(col_widths[1], 10, process_text, 1, "L", fill)
+                    # Set consistent min row height and line height
+                    min_row_height = 50  # Minimum row height in points
+                    line_height = 6  # Height of each text line
+                    gap = 5  # Gap between rows to prevent overlapping
 
-                    pdf.set_xy(x_pos + col_widths[0] + col_widths[1], y_pos - 10)
-                    pdf.multi_cell(col_widths[2], 10, output_text, 1, "C", fill)
+                    # Calculate available height per entry (half of remaining space after header)
+                    available_height = (
+                        pdf.h - pdf.get_y() - 20
+                    ) / entries_per_page  # Leave space for footer
 
-                    # Check if we need a new page
-                    if pdf.get_y() > 250:
-                        pdf.add_page()
-                        pdf.set_font("DejaVu", "B", 14)
-                        pdf.cell(
-                            0, 10, "Input-Process-Output Details (continued)", ln=True
+                    # Process entries for this page
+                    for i in range(entries_per_page):
+                        if current_entry >= rows:
+                            break
+
+                        row = current_entry
+                        current_entry += 1
+
+                        # Get data from each column
+                        input_widget = self.ipo_table.cellWidget(row, 0)
+                        process_widget = self.ipo_table.cellWidget(row, 1)
+                        output_widget = self.ipo_table.cellWidget(row, 2)
+
+                        # Input column - get image
+                        input_item = self.ipo_table.item(row, 0)
+                        input_image_path = input_item.text() if input_item else None
+                        if input_widget:
+                            # Look for QLabel with pixmap in the input widget
+                            for child in input_widget.findChildren(QLabel):
+                                if child.pixmap() and not child.pixmap().isNull():
+                                    # First try to get path from toolTip
+                                    if child.toolTip() and os.path.exists(
+                                        child.toolTip()
+                                    ):
+                                        input_image_path = child.toolTip()
+                                        break
+                                    # If not in toolTip, try to get it from property
+                                    elif child.property("imagePath") and os.path.exists(
+                                        child.property("imagePath")
+                                    ):
+                                        input_image_path = child.property("imagePath")
+                                        break
+                                    # If still not found, check parent widget properties
+                                    elif input_widget.property(
+                                        "imagePath"
+                                    ) and os.path.exists(
+                                        input_widget.property("imagePath")
+                                    ):
+                                        input_image_path = input_widget.property(
+                                            "imagePath"
+                                        )
+                                        break
+
+                            # Debug info - helpful for troubleshooting
+                            if not input_image_path:
+                                print("Could not find valid image path in input widget")
+
+                        # Process column - extract simplified information
+                        process_text = ""
+                        file_type = "Single Image"
+                        folder_name = ""
+                        if process_widget:
+                            process_label = process_widget.findChild(QLabel)
+                            if process_label:
+                                # Extract the simplified information
+                                text = process_label.text()
+                                lines = text.split("\n")
+
+                                # Get date and time
+                                date_line = next(
+                                    (
+                                        line
+                                        for line in lines
+                                        if "Date & Time Processed:" in line
+                                    ),
+                                    "",
+                                )
+                                date_time = (
+                                    date_line.partition("Date & Time Processed:")[
+                                        2
+                                    ].strip()
+                                    if date_line
+                                    else "N/A"
+                                )
+
+                                # Get file info
+                                file_line = next(
+                                    (line for line in lines if "File:" in line), ""
+                                )
+                                file_name = (
+                                    file_line.split(":")[1].strip()
+                                    if file_line
+                                    else "N/A"
+                                )
+
+                                # Get file type and folder
+                                type_line = next(
+                                    (line for line in lines if "File Type:" in line), ""
+                                )
+                                if type_line:
+                                    if "Folder" in type_line:
+                                        file_type = "Folder"
+                                        folder_line = next(
+                                            (
+                                                line
+                                                for line in lines
+                                                if "Folder:" in line
+                                            ),
+                                            "",
+                                        )
+                                        folder_name = (
+                                            folder_line.split(":")[1].strip()
+                                            if folder_line
+                                            else ""
+                                        )
+
+                                # Get extracted text (limit to 5 lines)
+                                text_lines = []
+                                in_text_section = False
+                                text_line_count = 0
+                                for line in lines:
+                                    if "Extracted Text:" in line:
+                                        in_text_section = True
+                                    elif "HATE SPEECH ANALYSIS:" in line:
+                                        in_text_section = False
+                                    elif in_text_section and line.strip():
+                                        if text_line_count < 5:  # Limit to 5 lines
+                                            text_lines.append(line.strip())
+                                            text_line_count += 1
+                                        elif text_line_count == 5:
+                                            text_lines.append("... [text truncated]")
+                                            text_line_count += 1
+                                extracted_text = (
+                                    "\n".join(text_lines)
+                                    if text_lines
+                                    else "No text detected"
+                                )
+
+                                # Get prediction info
+                                score_line = next(
+                                    (
+                                        line
+                                        for line in lines
+                                        if "Prediction Score:" in line
+                                    ),
+                                    "",
+                                )
+                                score = (
+                                    score_line.split(":")[1].strip()
+                                    if score_line
+                                    else "N/A"
+                                )
+
+                                interpretation_line = next(
+                                    (
+                                        line
+                                        for line in lines
+                                        if "Interpretation:" in line
+                                    ),
+                                    "",
+                                )
+                                interpretation = (
+                                    interpretation_line.split(":")[1].strip()
+                                    if interpretation_line
+                                    else "N/A"
+                                )
+
+                                conclusion_line = next(
+                                    (line for line in lines if "Conclusion:" in line),
+                                    "",
+                                )
+                                conclusion = (
+                                    conclusion_line.split(":")[1].strip()
+                                    if conclusion_line
+                                    else "N/A"
+                                )
+
+                                path_line = next(
+                                    (line for line in lines if "Path:" in line),
+                                    "",
+                                )
+                                path = (
+                                    path_line.split(":", 1)[1].strip()
+                                    if path_line
+                                    else "N/A"
+                                )
+
+                                # Build simplified process text
+                                process_text = f"Date & Time: {date_time}\n"
+                                process_text += f"File: {file_name}\n"
+                                process_text += f"Type: {file_type}"
+                                if file_type == "Folder":
+                                    process_text += (
+                                        f" ({folder_name})" if folder_name else ""
+                                    )
+                                process_text += "\n\nExtracted Text:\n" + extracted_text
+                                process_text += "\n\nPrediction Score: " + score
+                                process_text += "\nInterpretation: " + interpretation
+                                process_text += "\nConclusion: " + conclusion
+                                process_text += "\n\nFile Path: " + path
+
+                        # Output column - get image and status
+                        output_item = self.ipo_table.item(row, 2)
+                        output_image_path = output_item.text() if output_item else None
+                        # output_image_path = None
+                        output_status = "No result"
+                        if output_widget:
+                            # First get status from status label if it exists
+                            status_label = output_widget.findChild(QLabel)
+                            if status_label:
+                                output_status = (
+                                    "HATE SPEECH"
+                                    if "HATE" in status_label.text().upper()
+                                    else "CLEAN"
+                                )
+
+                            # Then look for image in any QLabel with pixmap
+                            for child in output_widget.findChildren(QLabel):
+                                if child.pixmap() and child.toolTip():
+                                    output_image_path = child.toolTip()
+                                    if os.path.exists(output_image_path):
+                                        break
+
+                        # Calculate row height based on available space
+                        row_height = min(
+                            available_height - gap, 80
+                        )  # Max 80 points per entry
+
+                        # Store position for the row
+                        x_pos = pdf.get_x()
+                        y_pos = pdf.get_y()
+
+                        # Original image cell
+                        pdf.set_xy(x_pos, y_pos)
+                        if input_image_path and os.path.exists(input_image_path):
+                            try:
+                                pdf.cell(col_widths[0], row_height, "", 1, 0)
+                                # Calculate dimensions for the image while maintaining aspect ratio
+                                img_width = col_widths[0] - 6
+                                img_height = row_height - 6
+                                pdf.image(
+                                    input_image_path,
+                                    x=x_pos + 3,
+                                    y=y_pos + 3,
+                                    w=img_width,
+                                    h=img_height,
+                                )
+                            except Exception as e:
+                                pdf.set_xy(x_pos, y_pos)
+                                pdf.cell(
+                                    col_widths[0],
+                                    row_height,
+                                    f"Image Error: {str(e)}",
+                                    1,
+                                    0,
+                                    "C",
+                                )
+                        else:
+                            pdf.cell(col_widths[0], row_height, "No Image", 1, 0, "C")
+
+                        # Analysis text cell
+                        pdf.set_xy(x_pos + col_widths[0], y_pos)
+
+                        # Draw cell border first
+                        pdf.rect(
+                            x_pos + col_widths[0], y_pos, col_widths[1], row_height
                         )
-                        pdf.set_font("DejaVu", "", 10)
+
+                        # Add text with multi_cell inside the predefined boundaries
+                        pdf.set_xy(
+                            x_pos + col_widths[0] + 2, y_pos + 2
+                        )  # Small padding
+                        pdf.multi_cell(
+                            col_widths[1] - 4, line_height, process_text, 0, "L"
+                        )
+
+                        # Result cell
+                        pdf.set_xy(x_pos + col_widths[0] + col_widths[1], y_pos)
+
+                        if output_image_path and os.path.exists(output_image_path):
+                            try:
+                                pdf.cell(col_widths[2], row_height, "", 1, 0)
+                                # Add status text at the top of the cell
+                                pdf.set_xy(
+                                    x_pos + col_widths[0] + col_widths[1], y_pos + 2
+                                )
+                                pdf.set_font("Arial", "B", 10)
+                                pdf.cell(col_widths[2], 6, output_status, 0, 0, "C")
+                                pdf.set_font("Arial", "", 10)
+
+                                # Calculate dimensions for result image
+                                img_width = col_widths[2] - 6
+                                img_height = row_height - 12  # Leave space for text
+
+                                # Position image below the text
+                                pdf.image(
+                                    output_image_path,
+                                    x=x_pos + col_widths[0] + col_widths[1] + 3,
+                                    y=y_pos + 8,  # Position below status text
+                                    w=img_width,
+                                    h=img_height,
+                                )
+                            except Exception as e:
+                                pdf.set_xy(x_pos + col_widths[0] + col_widths[1], y_pos)
+                                pdf.cell(
+                                    col_widths[2],
+                                    row_height,
+                                    f"{output_status}\nError: {str(e)}",
+                                    1,
+                                    0,
+                                    "C",
+                                )
+                        else:
+                            pdf.set_font("Arial", "B", 12)
+                            pdf.cell(
+                                col_widths[2], row_height, output_status, 1, 0, "C"
+                            )
+                            pdf.set_font("Arial", "", 10)
+
+                        # Move to next row position
+                        pdf.set_xy(x_pos, y_pos + row_height + gap)
 
             # Save PDF
             now = datetime.now()
@@ -2700,7 +2989,8 @@ class GalleryApplication(QMainWindow):
 
         except Exception as e:
             self.show_custom_popup("Error", f"Failed to generate report:\n{str(e)}")
-        # endregion
+
+    # endregion
 
     # region IPO
 
@@ -2764,6 +3054,13 @@ class GalleryApplication(QMainWindow):
             row = self.ipo_table.rowCount()
             self.ipo_table.insertRow(row)
             self.ipo_table.setRowHeight(row, 250)
+
+            self.ipo_table.setItem(
+                row, 0, QTableWidgetItem(img_data["path"])
+            )  # Input column
+            self.ipo_table.setItem(
+                row, 2, QTableWidgetItem(img_data["path"])
+            )  # Output column
 
             # Input column - original image
             input_container = QWidget()

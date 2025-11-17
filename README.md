@@ -1,6 +1,6 @@
 # Hate-Speech-Detection-in-User-Generated-Images-Using-CLIP-and-VisualBERT-Hybrid-Algorithms
 
-A final project created in partial fulfillment of the courss Thesis 1 and Thesis 2.
+A final project created in partial fulfillment of the courses Thesis 1 and Thesis 2.
 
 This project presents a hybridized VisualBERT and CLIP model trained for detecting hate speech in user-generated images.
 The hybrid model is deployed in a gallery application featuring various functionalities, including:

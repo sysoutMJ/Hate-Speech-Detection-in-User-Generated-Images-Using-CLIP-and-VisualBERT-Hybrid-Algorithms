@@ -1,4 +1,5 @@
 # Hate-Speech-Detection-in-User-Generated-Images-Using-CLIP-and-VisualBERT-Hybrid-Algorithms
+**Completion Date:** May 2025  
 
 A final project created in partial fulfillment of the courses Thesis 1 and Thesis 2.
 
